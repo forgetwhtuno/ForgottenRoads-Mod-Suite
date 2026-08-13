@@ -32,10 +32,21 @@ foreach ($mod in $Manifest.mods) {
 
     if (Test-Path (Join-Path $targetPath ".git")) {
         Push-Location $targetPath
-        $branch = git branch --show-current 2>$null
-        $sha = git rev-parse --short HEAD 2>$null
-        Pop-Location
-        $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "OK (branch=$branch head=$sha)" }
+        try {
+            $branch = (git branch --show-current 2>$null).Trim()
+            $sha = (git rev-parse --short HEAD 2>$null).Trim()
+            $dirty = @((git status --porcelain --untracked-files=normal 2>$null)).Count -gt 0
+        }
+        finally { Pop-Location }
+        if ($branch -ne $mod.branch) {
+            $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "BRANCH MISMATCH (expected=$($mod.branch) actual=$branch head=$sha)" }
+        }
+        elseif ($dirty) {
+            $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "DIRTY (branch=$branch head=$sha; BUILD_ALL requires -AllowDirty)" }
+        }
+        else {
+            $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "OK (branch=$branch head=$sha clean)" }
+        }
         continue
     }
 

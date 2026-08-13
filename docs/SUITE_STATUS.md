@@ -1,91 +1,109 @@
 # Suite Status
 
+Central status is intentionally conservative. Individual repos/draft branches remain authoritative.
+
+| Mod | Central status | Test classification in `suite.json` | Player-facing UI observed in source |
+|---|---|---|---|
+| Deep Sims | NEEDS LIVE TEST | standalone deterministic | command/status driven |
+| Party Tools | NEEDS LIVE TEST | standalone deterministic | Party Tools panel |
+| Contracts | NEEDS LIVE TEST | standalone deterministic | launcher + contract board |
+| Journal | NEEDS LIVE TEST | standalone deterministic | launcher + journal window |
+| Guild Life | NEEDS LIVE TEST | standalone deterministic | launcher + guild window |
+| Campmaster | NEEDS LIVE TEST | standalone deterministic + control API suite | command/control API |
+| Nemesis | NEEDS LIVE TEST | standalone deterministic + in-game selftest | command driven |
+| Crafting Expanded | BLOCKED for release polish | standalone deterministic | crafting window |
+| Practice Duel | NEEDS LIVE TEST | standalone deterministic + in-game selftest | command driven |
+| PvP | NEEDS LIVE TEST overall; combat LIVE VERIFIED | **in-game selftest** (`/epvp selftest`) | dedicated PvP panel |
+| Follow | NEEDS LIVE TEST | standalone deterministic | contextual Sim menu / travel overlay (no dedicated general panel) |
+| Suite Hub | NEEDS LIVE TEST | standalone deterministic | launcher + central window |
+
+`BUILD_ALL.ps1` consumes the declared `testScripts` arrays rather than equating "no root
+RUN_TESTS.ps1" with "no tests." PvP is correctly classified as an in-game selftest rather than an
+offline deterministic runner.
+
 ## Phase plan
 
-**Phase 1** (this pass): central repo, manifest/setup/build/install, docs and the live-test
-matrix, Suite Hub skeleton, an Overview page, installed-mod discovery, a working compact
-launcher, and the duplicate-instance investigation.
+**Phase 1** (delivered): central repo, manifest/setup/build/install, docs and the live-test
+matrix, Suite Hub skeleton, an Overview page, installed-mod discovery, a working compact launcher,
+and the duplicate-instance investigation.
 
-**Phase 2** (not started): Deep Sims/PvP/Journal/Contracts/Guild Life Hub tabs, dedicated-panel
-integration, PvP panel drag repair.
+**Phase 2** (delivered this pass, Hub side only — see below): versioned Aura wire bridge
+(`describe`/`settings.*`/`setting.set`/`action`), the canonical readiness state machine, mutable
+bool/choice setting editors, two-argument actions, and a Hub self-presence endpoint. **No sibling
+mod implements the `SuiteAuraProvider` adapter yet** — that is the next phase of work, tracked per
+mod in `docs/CURRENT_WORK.md`.
 
-**Phase 3** (not started): Party Tools, Follow, Campmaster, Duel, Nemesis, Crafting tabs.
+**Phase 3** (not started): per-mod `SuiteAuraProvider` adapters wired to each mod's own
+`ControlApi`, dedicated-panel `openPanel` integration for Journal/Contracts/Guild Life/PvP/
+Crafting, and canonical-readiness-based fallback-launcher suppression on the mod side.
 
 Each phase gets its own build/test/PR/live-test cycle before the next one starts. Nothing gets
 merged automatically at a phase boundary.
 
-## Phase 1 delivered this session
-
-- `Erenshor-Mod-Suite` repo created under `forgetwhtuno`, public, no source/history duplicated
-  from any mod repo.
-- `suite.json` manifest listing all 11 mods, their local directories (including the two
-  `-migration` exceptions), branches, DLL names, and honestly-labeled status.
-- `SETUP_WORKSPACE.ps1` — originally junction-based workspace linking, run and verified against
-  all 11 mods; since replaced by a single consolidated project root with every mod as a real
-  worktree (`SETUP_WORKSPACE.ps1` now just verifies presence / clones what's missing directly into
-  place). See `docs/ARCHITECTURE.md`.
-- `BUILD_ALL.ps1` / `INSTALL_ALL.ps1` / `BUILD_AND_INSTALL_ALL.bat` — staging-then-atomic
-  build/install pipeline, run end-to-end: all 11 mods built, every mod with a test suite passed,
-  all 11 installed to the live plugins folder with reported SHA256 hashes.
-- `docs/ARCHITECTURE.md`, `docs/CURRENT_WORK.md`, `docs/LIVE_TEST_MATRIX.md`,
-  `docs/UI_DESIGN.md`, this file.
-- Duplicate-Lunaris-plugin-instance investigation: strong circumstantial evidence gathered and
-  documented (see `docs/CURRENT_WORK.md`); `ErenshorContracts` instrumented with instance-hash
-  diagnostics; **still unresolved pending a fresh live run** — no defensive fix applied anywhere.
-- Suite Hub skeleton, Overview page, compact launcher, installed-mod discovery: see the next
-  section for exactly what was and wasn't delivered.
-
 ## Suite Hub — exact current scope
 
-<!-- Fill in precisely once the Hub skeleton work lands. Do not let this section drift ahead of
-     what's actually built and verified — if the Hub isn't built yet, say so plainly rather than
-     describing the intended design as if it exists. -->
-
 **Repo:** [ErenshorSuiteHub](https://github.com/forgetwhtuno/ErenshorSuiteHub), public, `main`
-branch, GUID `forgetwhtuno.erenshor.suitehub`, version `0.1.0`.
+branch, GUID `forgetwhtuno.erenshor.suitehub`, version `0.2.0`.
 
-**What exists (Phase 1 skeleton, built this session):**
+**What exists (Phase 1 + Phase 2 Hub-side work):**
 
-- `src/HubLauncher.cs` — compact grip+button launcher (18px drag-only grip strip, non-overlapping
-  `GUI.Button` action surface), dark-cyan palette matching Journal/Contracts/Guild Life/PvP. Only
-  drawn once `IsLocalCharacterReady()` is true (same exact verified signal already used by those
-  mods), recomputed every frame, never cached across scene loads.
-- `src/HubWindow.cs` — one movable window, header-drag only, with exactly one working tab:
-  Overview. Shows the Hub's own version and the detected-mod list. No other mod's tab exists yet.
-- `src/ErenshorSuiteHubPlugin.cs` — plugin entry point. Toggle/close requests observed in `OnGUI`
-  are only ever applied in `Update()` via `_pendingToggle`/`_pendingClose` (the same deferred-
-  mutation pattern Contracts introduced this session), never mutated mid-`OnGUI`. Click-through
-  guard via `[HarmonyPatch(typeof(PlayerControl), "LeftClick")]` and a `csMouseOrbit.LateUpdate`
-  camera-look mute, matching the rest of the suite.
-- `src/ModDiscovery.cs` — installed-mod discovery, deliberately simple: checks whether each of the
-  other ten suite mods' known plugin DLL file names exist in the same `plugins` folder this Hub's
-  own DLL loaded from (`AppContext.BaseDirectory` + `"plugins"`, following the same directory
-  convention ErenshorContracts's `Awake()` already relies on). No reflection into those DLLs, no
-  type loading, no calls into them, no Aura API usage, no code added to any of the other ten mod
-  repos. Pure and Unity-free, so it is directly unit tested (see below).
+- `src/HubLauncher.cs` — compact grip+button launcher (drag-only grip strip, non-overlapping
+  `GUI.Button` action surface).
+- `src/GameplayReadinessPolicy.cs` — the canonical positive-state-plus-`CanMove`-acquisition-plus-
+  ~1s-debounce readiness state machine (`CharacterSelect -> PlayerObjectCreating ->
+  ZoneTransition -> WorldInitializing -> Stabilizing -> Ready`). Every native member it reads
+  (`GameData.InCharSelect`, `GameData.Zoning`, `GameData.PlayerControl`, `PlayerControl.Myself`,
+  `PlayerControl.CanMove`, `Character.MyStats`, `GameData.SimMngr`, `GameData.SimPlayerGrouping`)
+  was confirmed present via reflection against the real installed `Assembly-CSharp.dll` during this
+  integration pass.
+- `src/HubWindow.cs` — one movable window, header-drag only, installed-only left navigation, an
+  Overview page, and a per-module page with common controls (dedicated-panel open button when
+  advertised), common settings (mutable bool toggle, mutable choice `< value >` cycle control,
+  read-only text/number), and Basic/Advanced/Developer tiers.
+- `src/ErenshorSuiteHubPlugin.cs` — plugin entry point; readiness/toggle/close mutation deferred
+  out of `OnGUI` into `Update()`; click-through guard via `[HarmonyPatch(typeof(PlayerControl),
+  "LeftClick")]` and a `csMouseOrbit.LateUpdate` camera-look mute; also registers the Hub's own
+  live-presence Aura provider (`forgetwhtuno.erenshor.suitehub.v1.describe`) and unregisters it in
+  `OnDestroy`.
+- `src/AuraModuleBridge.cs` — per-module Aura subscriber bridge implementing the full v1 wire
+  contract: `describe`, `settings.basic/advanced/developer`, `setting.set`, and **two-argument**
+  `action(actionId, argument)`. A bridge object exists for every catalog module ID even when that
+  module is entirely absent, so Hub-first/mod-first/unload/late-reload all work without a load-
+  order dependency.
+- `src/SuiteWireCodec.cs` / `src/SuiteModuleRegistry.cs` — pure, unit-tested wire parsing and
+  registration policy, including bounded `choice` `options` parsing/validation (a mutable choice
+  setting must declare non-empty options and a value drawn from them).
+- `src/SuiteModuleCatalog.cs` — the 11-module catalog; `follow` is `HasDedicatedPanel = false` per
+  the canonical contract (Follow remains a contextual Sim menu/travel overlay, not a general Hub
+  panel).
+- `src/ModDiscovery.cs` — file-presence-only installed-mod discovery, unchanged in spirit from
+  Phase 1.
 
 **Verified vs. not verified:**
 
-- Compile-verified: builds cleanly with `csc.exe` against the installed Lunaris/Assembly-CSharp/
-  Unity assemblies (net48, C# 5-safe legacy-compiler style, zero BepInEx references).
-- Deterministic-test-verified: `RUN_TESTS.ps1` runs `tests/ModDiscoveryTests.cs` against the real
-  `ModDiscovery.Scan()` logic (missing directory, empty directory, mixed present/absent DLLs,
-  null/empty path input) — 82 assertions, all passing.
-- Installed: built and copied to `<Erenshor>\plugins\ErenshorSuiteHub.dll` via the mod's own
-  `BUILD_AND_INSTALL.ps1`, confirmed as a genuinely new file (nothing previously existed at that
-  path).
-- **Not live-verified.** The game has not been launched with this DLL installed. The launcher's
-  on-screen appearance, the drag/click interaction, the deferred-toggle fix, the click-through
-  guard, and the Overview tab's actual detected-mod list have not been observed running. Status is
-  correctly `NEEDS_LIVE_TEST` in `suite.json`, not a claim of working behavior.
+- Compile-verified: builds cleanly with `csc.exe` against the real installed
+  `Assembly-CSharp.dll`/Lunaris/Unity assemblies (net48, C# 5-safe legacy-compiler style). Compiled
+  output references only `mscorlib`, `Lunaris`, `0Harmony` (vendored Lunaris dependency, not
+  BepInEx), `UnityEngine.*`, `Assembly-CSharp`, `System`/`System.Core` — zero BepInEx references.
+- Deterministic-test-verified: `RUN_TESTS.ps1` runs the full `tests/` suite (readiness policy, mod
+  discovery, module registry including the Follow/PartyTools catalog assertions, wire codec
+  including the new choice-options coverage, UI geometry) — 92 assertions, all passing.
+- Installed: staged and built successfully through the central `BUILD_ALL.ps1` pipeline
+  (`-Mod SuiteHub -BuildOnly`) against the real game/Lunaris references; not copied to the live
+  `plugins` folder during this integration pass (no install requested).
+- **Not live-verified.** The game has not been launched with this build installed. The launcher's
+  on-screen appearance, the drag/click interaction, the readiness gate's actual timing, the
+  mutable-choice cycle control, and the Hub presence endpoint being consumed by any sibling mod
+  have not been observed running.
 
-**Explicitly deferred to Phase 2+ (not built in this repo):**
+**Explicitly deferred to Phase 3 (not built in this repo or `ErenshorSuiteHub` during this pass):**
 
-- Per-mod tabs beyond Overview.
-- Dedicated-panel integration for any other mod (opening/embedding another mod's own window).
-- Live mod registration or any other-mod interaction beyond the file-presence check above.
-- Any Lunaris Aura investigation or usage — not evaluated, not touched.
-- The shared UI containment utility (`SuiteUiInput.IsPointerCaptured`/`IsDragActive`) described in
-  `docs/ARCHITECTURE.md` — the Hub still has its own independent click-through/camera-mute Harmony
-  patches, not a shared one.
-- Any config read/write bridge into another mod's settings.
+- Every sibling mod's own `SuiteAuraProvider` adapter over its `ControlApi` — none exists yet, so
+  every module page currently shows "installed; bridge unavailable" even after a correct Hub
+  install.
+- Dedicated-panel `openPanel` wiring on the mod side for Journal/Contracts/Guild Life/PvP/Crafting.
+- Mod-side consumption of the Hub presence endpoint for canonical fallback-launcher suppression
+  (`GameplayReady AND HubLive AND ThisModuleSuiteBridgeRegistered`) — the Hub now publishes the
+  presence endpoint this requires, but no mod subscribes to it yet.
+- Any config read/write bridge into another mod's settings beyond the advertised `setting.set`
+  endpoint.

@@ -44,3 +44,10 @@ Legend: `PASS` (live-confirmed working) · `FAIL` (live-confirmed broken, see no
 - **Natural PvP ambush** has not been observed. This is untested, not a failure — check the
   configured ambush timing/chance defaults and confirm the player is standing in an allowed
   ambush zone with PvP/ambush enabled before drawing any conclusion.
+- **2026-08-13 integration pass**: every row in this matrix is still `-` (not yet live-tested) with
+  respect to the newly-reconciled Hub contract (two-arg actions, choice settings, canonical
+  1.0s+CanMove readiness, per-mod Aura providers) even where a prior PASS exists for older
+  behavior — do not carry forward old PASS marks for "central tab (Suite Hub)" or "menu visibility"
+  rows without re-confirming, since the readiness policy and launcher-suppression logic changed
+  under all 11 mods. PvP's and Crafting's panel-drag rewrites are new this pass and unverified live
+  (see `docs/CURRENT_WORK.md`). All 12 plugins are freshly built/installed as of this pass.

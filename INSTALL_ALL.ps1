@@ -1,18 +1,18 @@
-# Installs already-built mod DLLs from the last BUILD_ALL.ps1 staging run into the live plugins
-# folder, without rebuilding anything. Useful after a -BuildOnly pass once you're ready to test,
-# or to reinstall without recompiling. Run BUILD_ALL.ps1 first if the staging folder is empty or
-# stale for a mod you want.
-#
-# Usage: powershell -File INSTALL_ALL.ps1 [-Mod PvP] [-GameDir "D:\...\Erenshor"]
+# Install a previously COMPLETE BUILD_ALL.ps1 staging set without rebuilding. The staging
+# manifest fingerprints suite.json, Assembly-CSharp.dll and every staged DLL so stale/mixed output
+# is refused instead of silently copied.
 
 param(
     [string[]]$Mod = @(),
-    [string]$GameDir = ""
+    [string]$GameDir = "",
+    [switch]$AllowGameRunning
 )
 
 $ErrorActionPreference = "Stop"
 $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Manifest = Get-Content (Join-Path $SuiteRoot "suite.json") -Raw | ConvertFrom-Json
+. (Join-Path $SuiteRoot "SuiteBuild.Common.ps1")
+$SuiteJson = Join-Path $SuiteRoot "suite.json"
+$Manifest = Get-Content $SuiteJson -Raw | ConvertFrom-Json
 
 function Find-Game([string]$Explicit) {
     if ($Explicit -and (Test-Path (Join-Path $Explicit "Erenshor.exe"))) { return (Resolve-Path $Explicit).Path }
@@ -21,6 +21,7 @@ function Find-Game([string]$Explicit) {
         if ($pf) { $candidates += (Join-Path $pf "Steam\steamapps\common\Erenshor") }
     }
     foreach ($root in @((Join-Path ${env:ProgramFiles(x86)} "Steam"), (Join-Path $env:ProgramFiles "Steam"))) {
+        if (-not $root) { continue }
         $vdf = Join-Path $root "steamapps\libraryfolders.vdf"
         if (Test-Path $vdf) {
             [regex]::Matches((Get-Content $vdf -Raw), '"path"\s+"([^"]+)"') | ForEach-Object {
@@ -37,29 +38,56 @@ function Find-Game([string]$Explicit) {
 
 $RealGameDir = Find-Game $GameDir
 $RealPlugins = Join-Path $RealGameDir "plugins"
-$StagingPlugins = Join-Path $env:TEMP "ErenshorSuiteBuildStaging\plugins"
+$assemblyCSharp = Join-Path $RealGameDir "Erenshor_Data\Managed\Assembly-CSharp.dll"
+$Staging = Join-Path $env:TEMP "ErenshorSuiteBuildStaging"
+$StagingPlugins = Join-Path $Staging "plugins"
+$StageManifestPath = Join-Path $Staging "suite-build.json"
+$stage = Read-SuiteStageManifest $StageManifestPath
 
-if (-not (Test-Path $StagingPlugins)) {
-    throw "No staged build found at $StagingPlugins. Run BUILD_ALL.ps1 first."
+if ((Get-Sha256 $SuiteJson) -ne [string]$stage.suiteJsonSha256) {
+    throw "suite.json changed since this staging set was built. Re-run BUILD_ALL.ps1."
+}
+if ((Get-Sha256 $assemblyCSharp) -ne [string]$stage.assemblyCSharpSha256) {
+    throw "Assembly-CSharp.dll changed since this staging set was built. Rebuild against the current game."
+}
+if ((Test-ErenshorRunning) -and -not $AllowGameRunning) {
+    throw "Erenshor is running. Close it before installing, or pass -AllowGameRunning only when intentional Lunaris hot reload is safe."
 }
 
-$selected = $Manifest.mods | Where-Object { $_.enabled }
-if ($Mod.Count -gt 0) { $selected = $selected | Where-Object { $Mod -contains $_.id } }
+$entries = @($stage.entries)
+if ($Mod.Count -gt 0) {
+    foreach ($requested in $Mod) {
+        if ($null -eq ($entries | Where-Object { $_.id -eq $requested } | Select-Object -First 1)) {
+            throw "Requested mod '$requested' is not part of this complete staging set. Re-run BUILD_ALL.ps1 with the desired selection."
+        }
+    }
+    $entries = @($entries | Where-Object { $Mod -contains $_.id })
+}
+if ($entries.Count -eq 0) { throw "No staged modules selected." }
+
+$installItems = @()
+foreach ($entry in $entries) {
+    $staged = Join-Path $StagingPlugins $entry.dll
+    if (-not (Test-Path $staged)) { throw "Staged DLL is missing: $($entry.dll)" }
+    $actualHash = Get-Sha256 $staged
+    if ($actualHash -ne [string]$entry.sha256) { throw "Staged DLL hash mismatch: $($entry.dll). Rebuild." }
+    $installItems += [PSCustomObject]@{
+        Id=$entry.id; DisplayName=$entry.displayName; Source=$staged; Destination=(Join-Path $RealPlugins $entry.dll); ExpectedSha256=$actualHash; Entry=$entry
+    }
+}
+
+Install-SuiteSetTransactional $installItems
 
 $results = @()
-foreach ($m in $selected) {
-    $staged = Join-Path $StagingPlugins $m.dll
-    $row = [PSCustomObject]@{ Mod = $m.displayName; Installed = "-"; Sha256 = "-" }
-    if (-not (Test-Path $staged)) {
-        $row.Installed = "no staged build found"
-        $results += $row
-        continue
+foreach ($item in $installItems) {
+    $liveHash = Get-Sha256 $item.Destination
+    $entry = $item.Entry
+    $results += [PSCustomObject]@{
+        Mod = $entry.displayName
+        Source = $entry.branch + "@" + ([string]$entry.sourceSha).Substring(0, 12)
+        Installed = "yes"
+        Sha256 = $liveHash.Substring(0, 16) + "..."
     }
-    $live = Join-Path $RealPlugins $m.dll
-    Copy-Item $staged $live -Force
-    $row.Installed = "yes"
-    $row.Sha256 = (Get-FileHash $live -Algorithm SHA256).Hash.ToLowerInvariant().Substring(0, 16) + "..."
-    $results += $row
 }
 
 Write-Host "`n==== Install summary ====" -ForegroundColor Cyan

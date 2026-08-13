@@ -12,7 +12,24 @@ Nothing in this suite has a merged PR. All work below is on draft, unmerged bran
 
 ---
 
-## Duplicate Lunaris plugin instance — BLOCKED / NEEDS LIVE TEST (highest priority open question)
+## Duplicate Lunaris plugin instance — NOT REPRODUCED IN FRESH RUN / NOT CURRENT UI CAUSE (2026-08-13, post-integration live run)
+
+A fresh `lunaris.log` taken after the 2026-08-13 integration pass shows exactly one instance for
+both diagnosed plugins, start to finish:
+
+- Contracts: `Awake instance=-1725027768`, every Update diagnostic line carries
+  `instance=-1725027768`, `Shutdown: OnDestroy instance=-1725027768` — one id throughout.
+- Deep Sims: `Awake serial=1 unityId=-458`, heartbeats `serial=1 unityId=-458 instanceMatches=True`,
+  `OnDestroy serial=1 unityId=-458 instanceMatches=True`.
+
+The double-`Awake` pattern recorded below is therefore **not reproduced** in the current build and
+is **not** the cause of the live Suite Hub click/drag failure investigated next in this doc. Do not
+re-open this investigation without new contradicting evidence. Contracts' per-tick
+`[ContractsInstanceDiag] Update tick` diagnostic has served its purpose and is being
+throttled/removed as noise; the `Awake`/`OnDestroy` instance lines are being kept since they're
+cheap and still useful signal if this ever resurfaces.
+
+### Historical investigation (superseded by the fresh single-instance run above)
 
 A real Lunaris session log (`lunaris.log`) showed **every** native `[LunarisPlugin]` mod in this
 suite — all 11 — running its full `Awake()` (the "loaded" message and every other Awake-time
@@ -37,6 +54,44 @@ Update log) or orphaned/benign (only one hash ever appears in Update). No defens
 duplicate-instance guard has been added anywhere; per explicit instruction, none should be until
 this is confirmed. **A fresh live run with this diagnostic has not yet occurred** — the log on
 disk as of this writing predates the diagnostic-instrumented build.
+
+## 2026-08-13 three-audit integration pass — SOURCE VERIFIED + OFFLINE TEST VERIFIED, INSTALLED FOR LIVE TEST
+
+Reconciled three parallel overnight audit packages (Core/Suite+Hub, ten non-Deep mods, Deep Sims)
+per `Erenshor-Three-Audit-Integration-Handoff` — semantically, not as blind patch application.
+Highlights:
+
+- Canonical v1 Hub contract implemented: two-argument `action(actionId, argument)`, mutable
+  choice-setting descriptor (`options=`), Follow `HasDedicatedPanel=false`, canonical
+  1.0s+`CanMove`-latch readiness policy used identically across Hub and all 10 fallback-capable
+  mods (replacing several mods' original flat 2.5s policy), and a Hub self-presence Aura endpoint
+  (`forgetwhtuno.erenshor.suitehub.v1.describe`) so mods can detect `HubLive`.
+- Every one of the 10 non-Deep mods got a thin `<Mod>SuiteAuraProvider` wrapping its own
+  `<Mod>ControlApi` — no mod references `ErenshorSuiteHub.dll`, every provider explicitly
+  unregisters in `OnDestroy()`.
+- The real Lunaris Aura transport shape (`LunarisPlugin.IPCAuraProvider<...>` /
+  `IAuraProvider<...>.RegisterFunc/UnregisterFunc/RegisterAction/UnregisterAction`) was not
+  documented by any of the three audits — it was derived from .NET reflection against the actual
+  installed `Lunaris.dll` and used consistently across every provider.
+- `BUILD_ALL.ps1`/`INSTALL_ALL.ps1` hardened with the Core worker's transactional
+  install/rollback, staging-manifest fingerprinting, and (real bug fix) a
+  whole-selected-set install gate — previously a failing declared test for one mod did not block
+  that mod's DLL from installing.
+- Real bugs found and fixed during reconciliation (not just ported): Journal's patch called a
+  nonexistent `ResolveInitialWindowRect()` (fixed to the real `ResolveInitialRect()`); Campmaster's
+  standalone `RUN_CONTROL_API_TESTS.ps1` harness stubs were already stale against the patch's own
+  additions; Deep Sims' `RoleplayPerspective.cs` had a `Regex.Escape`-ordering bug that silently
+  disabled every multi-word reject phrase in the final Roleplay guard; Deep Sims' `SocialFoundation.cs`
+  identity-fact regex misclassified "what is a windblade?"-style questions.
+- Central pipeline run for real: **12/12 plugins build, 12/12 pass their declared offline tests**
+  (PvP's self-test is in-game-only by design), zero BepInEx references in any compiled plugin,
+  `git diff --check` and a personal-data/secret/token privacy scan came back clean across all 13
+  repos. All 12 DLLs installed to the live game's `plugins\` folder with the game closed.
+- Nothing was committed, pushed, or merged. All 13 repos remain on their existing
+  `agent/lunaris-native*` / `main` branches with uncommitted working-tree changes only.
+- **NEEDS LIVE TEST**: everything UI/Hub/Aura/readiness-timing related — see
+  `docs/LIVE_TEST_MATRIX.md` and the ordered live-test plan handed back to the user alongside this
+  integration.
 
 Do not build further shared UI containment infrastructure (`docs/ARCHITECTURE.md`'s
 "Shared UI containment" section) until this is resolved.
