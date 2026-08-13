@@ -27,21 +27,33 @@ None of these mods' Lunaris-migration PRs are merged yet. This suite repo does n
 
 ## One-time setup
 
-Clone (or already have) every mod repo as a **sibling** of this checkout, i.e. `C:\Users\<you>\<RepoName>`
-next to `C:\Users\<you>\Erenshor-Mod-Suite`. Then:
+This repo expects to live inside one project root alongside its sibling repos, like:
+
+```
+<ProjectRoot>/
+    Erenshor-Mod-Suite/     <- this repo
+    ErenshorSuiteHub/
+    mods/
+        DeepSim-erenshor/
+        Erenshor-PvP/
+        ... (one real git worktree per mod, see suite.json)
+```
+
+Every entry under `mods/` (and `ErenshorSuiteHub/`, next to this repo) is a genuine git
+worktree — clone it there directly, or move an existing checkout there. This repo does not use
+junctions or any other indirection; `suite.json`'s `workspaceRoot`/`modsSubdir` fields just tell
+the tooling where to look.
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File SETUP_WORKSPACE.ps1
 ```
 
-This creates an NTFS junction under `mods\<id>` pointing at each sibling repo — a unified
-workspace view with **zero file duplication**; editing through `mods\<id>` edits the real repo.
-Pass `-Clone` to have it `gh repo clone` anything missing.
+checks that every repo listed in `suite.json` is physically present where expected, and (with
+`-Clone`) `gh repo clone`s anything missing directly into place. It does not create any links.
 
-Two mods are intentionally excluded from this workspace: `Erenshor-Duel` and `ErenshorFollow`
-(the plain-named checkouts) have older unreconciled local work on `main` and are not build
-targets — see `suite.json`'s `excluded` list and `docs/CURRENT_WORK.md` for why. The clean,
-buildable Lunaris checkouts live at `Erenshor-Duel-migration` and `ErenshorFollow-migration`.
+Two mods intentionally have their own older, unreconciled checkouts kept elsewhere (e.g. a
+`legacy-worktrees/` folder outside this repo) rather than being build targets — see
+`suite.json`'s `excluded` list and `docs/CURRENT_WORK.md` for exactly why and what's in them.
 
 ## Build + install
 
@@ -73,8 +85,9 @@ rebuilding — handy after a `-BuildOnly` pass once you're ready to test live.
 Submodules work, but on Windows with actively-edited sibling repos they add friction (detached
 HEAD surprises, `.gitmodules` drift, an extra commit step just to point at a newer sibling
 commit) for no benefit here — the suite repo doesn't need to pin exact sibling versions, it just
-needs to find them. A manifest (`suite.json`) plus junctions gets "one folder" with none of that
-fragility. If that tradeoff ever stops being true, revisit.
+needs to find them. A manifest (`suite.json`) that simply records where each repo lives inside one
+project root gets "one folder" with none of that fragility. If that tradeoff ever stops being
+true, revisit.
 
 ## Repo layout
 
@@ -83,10 +96,13 @@ Erenshor-Mod-Suite/
     README.md, AGENTS.md, suite.json      -- this file, agent-facing rules, the mod manifest
     BUILD_AND_INSTALL_ALL.bat             -- one-click entry point
     BUILD_ALL.ps1 / INSTALL_ALL.ps1       -- the actual build/install logic
-    SETUP_WORKSPACE.ps1                   -- one-time workspace linking
+    SETUP_WORKSPACE.ps1                   -- one-time workspace verification/cloning
     docs/                                 -- architecture, status, live-test tracking
     shared/ErenshorSuite.UI/              -- shared UI contract for the Suite Hub (Phase 2+)
-    mods/                                 -- junctions into sibling repos (created by setup, gitignored)
+```
+
+`mods/` and `ErenshorSuiteHub/` are siblings of this repo (see "One-time setup" above), not
+inside it — this repo has no `mods/` directory of its own.
 ```
 
 ## Development workflow

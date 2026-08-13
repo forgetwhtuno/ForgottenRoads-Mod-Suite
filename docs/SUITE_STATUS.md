@@ -20,7 +20,10 @@ merged automatically at a phase boundary.
   from any mod repo.
 - `suite.json` manifest listing all 11 mods, their local directories (including the two
   `-migration` exceptions), branches, DLL names, and honestly-labeled status.
-- `SETUP_WORKSPACE.ps1` — junction-based workspace linking, run and verified against all 11 mods.
+- `SETUP_WORKSPACE.ps1` — originally junction-based workspace linking, run and verified against
+  all 11 mods; since replaced by a single consolidated project root with every mod as a real
+  worktree (`SETUP_WORKSPACE.ps1` now just verifies presence / clones what's missing directly into
+  place). See `docs/ARCHITECTURE.md`.
 - `BUILD_ALL.ps1` / `INSTALL_ALL.ps1` / `BUILD_AND_INSTALL_ALL.bat` — staging-then-atomic
   build/install pipeline, run end-to-end: all 11 mods built, every mod with a test suite passed,
   all 11 installed to the live plugins folder with reported SHA256 hashes.

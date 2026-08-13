@@ -5,15 +5,15 @@ This repo orchestrates, it does not own. Read this before touching anything here
 ## Hard rules
 
 - **Never duplicate mod source into this repo.** Each mod repo (see `suite.json`) is
-  authoritative for its own code and git history. If you need to change mod behavior, change it
-  in the mod's own repo (via its `mods/<id>` junction or its real path) and commit there.
+  authoritative for its own code and git history. Change mod behavior in the mod's own real
+  worktree under `mods/<localDir>` (or `ErenshorSuiteHub/` for the Hub) and commit there.
 - **Never merge a mod's Lunaris-migration PR from here or anywhere else** unless the user
   explicitly asks for that specific merge in that specific conversation. All suite mods are
   currently on draft, unmerged `agent/lunaris-native[-deepsims]` branches.
-- **`Erenshor-Duel` and `ErenshorFollow` (plain names, no `-migration` suffix) are not build
-  targets.** They're older checkouts with unreconciled uncommitted local work on `main`. Build
-  from `Erenshor-Duel-migration` / `ErenshorFollow-migration` instead. See `suite.json`'s
-  `excluded` list.
+- **Some mods have an older, unreconciled checkout kept outside this workspace's build path**
+  (e.g. under a `legacy-worktrees/` folder) because it has uncommitted local work not yet ported
+  to the current migration branch. These are never build targets. See `suite.json`'s `excluded`
+  list and `docs/CURRENT_WORK.md` for exactly which mods and why.
 - **Before any GitHub write** (push, PR update, new repo, etc.), verify identity:
   ```
   gh auth status
@@ -44,7 +44,10 @@ higher priority than any further IMGUI/UI work, since it can invalidate UI test 
 list and build quirks) rather than reimplementing per-mod compilation here — don't "fix" that by
 inlining `csc` calls into this repo; if a mod's build script needs a change, change it in that
 mod's repo. The staging-then-atomic-copy behavior is achieved by pointing each mod's script at a
-disposable junctioned copy of the game folder, not by changing what the mod scripts do.
+disposable staging copy of the game folder (an NTFS junction to the real `Erenshor_Data`, so no
+framework DLL is ever duplicated — this is the only junction usage left anywhere in this repo, and
+it's build-time scaffolding, not a workspace-layout mechanism), not by changing what the mod
+scripts do.
 
 ## Suite Hub (Phase 2+)
 

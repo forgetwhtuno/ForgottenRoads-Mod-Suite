@@ -135,7 +135,9 @@ diff/analysis for exact code if this gets picked up.
 ## Suite-level work (this repo)
 
 ### Central repo, manifest, build/install pipeline — DONE (build/test verified)
-`suite.json` manifest, `SETUP_WORKSPACE.ps1` (junction-based workspace linking), `BUILD_ALL.ps1` /
+`suite.json` manifest, `SETUP_WORKSPACE.ps1` (originally junction-based workspace linking, since
+replaced by a single consolidated project root with every mod as a real worktree — see
+`docs/ARCHITECTURE.md`), `BUILD_ALL.ps1` /
 `INSTALL_ALL.ps1` / `BUILD_AND_INSTALL_ALL.bat` (staging-then-atomic build/install). Ran
 end-to-end against all 11 mods: every mod built, every mod with a test suite passed, every mod
 installed to the live plugins folder with a reported SHA256. This is genuinely verified — it's

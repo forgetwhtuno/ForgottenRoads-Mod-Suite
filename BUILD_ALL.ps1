@@ -58,9 +58,10 @@ function Find-Game([string]$Explicit) {
 $RealGameDir = Find-Game $GameDir
 $RealManaged = Join-Path $RealGameDir "Erenshor_Data\Managed"
 $RealPlugins = Join-Path $RealGameDir "plugins"
+$ModsDir = Join-Path $WorkspaceRoot $Manifest.modsSubdir
 # DeepSim-erenshor's checkout carries the dev-reference copy of Lunaris.dll/0Harmony.dll that the
 # game install itself doesn't have anywhere under it; every mod's own build script needs it.
-$LunarisLibDir = Join-Path $WorkspaceRoot "DeepSim-erenshor\LunarisLibs"
+$LunarisLibDir = Join-Path $ModsDir "DeepSim-erenshor\LunarisLibs"
 
 foreach ($required in @(
         (Join-Path $RealManaged "Assembly-CSharp.dll"),
@@ -100,7 +101,9 @@ if ($Skip.Count -gt 0) { $selected = $selected | Where-Object { $Skip -notcontai
 $results = @()
 
 foreach ($m in $selected) {
-    $modDir = Join-Path $WorkspaceRoot $m.localDir
+    $underMods = $true
+    if ($m.PSObject.Properties.Name -contains "underMods") { $underMods = $m.underMods }
+    $modDir = if ($underMods) { Join-Path $ModsDir $m.localDir } else { Join-Path $WorkspaceRoot $m.localDir }
     $buildScript = Join-Path $modDir "BUILD_AND_INSTALL.ps1"
     $row = [PSCustomObject]@{
         Mod       = $m.displayName

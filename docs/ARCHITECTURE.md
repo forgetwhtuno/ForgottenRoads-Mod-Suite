@@ -3,22 +3,34 @@
 ## Repo relationship
 
 ```
-Erenshor-Mod-Suite (this repo)         -- orchestration only: manifest, build/install, docs
-    |
-    +-- suite.json                     -- authoritative list of mods, their local dirs, branches
-    +-- mods/<id>  (NTFS junction)  ->  C:\Users\<you>\<RepoName>  (the real, authoritative repo)
+<ProjectRoot>/                          -- one physical folder holding the whole workspace
+    Erenshor-Mod-Suite/                 -- this repo: orchestration only (manifest, build/install, docs)
+        suite.json                      -- authoritative list of mods, their local dirs, branches
+    ErenshorSuiteHub/                   -- the Hub plugin's own repo, sibling of this one
+    mods/
+        <localDir>/                     -- one real git worktree per mod, per suite.json
 ```
 
-No mod source or git history lives in this repo. `mods/<id>` is a junction, not a copy or a
-submodule — edits made through it are edits to the real sibling repo.
+No mod source or git history lives in this repo. Every entry under `mods/` (and
+`ErenshorSuiteHub/`) is a genuine, independent git worktree with its own `.git`, remotes, and
+history — editing there edits and commits to that mod's real repo directly. `suite.json`'s
+`workspaceRoot`/`modsSubdir`/`underMods` fields are just how the tooling locates each one; they
+are not an indirection layer.
 
-## Why junctions instead of submodules
+## Why not junctions or git submodules
 
-Considered and rejected for this use case: git submodules pin an exact sibling commit and require
-an extra commit-and-push step in this repo every time a sibling repo moves forward, plus the usual
-detached-HEAD/`.gitmodules` friction on Windows. This suite doesn't need to pin versions — it just
-needs to find the sibling repos on disk and know their target branch/DLL name, which `suite.json`
-already records. Junctions get "one folder" with none of the submodule bookkeeping.
+This workspace previously used NTFS junctions from `mods/<id>` to repos scattered individually
+across the filesystem, back when those repos had grown up independently before this suite repo
+existed. Once every repo was consolidated into one physical project root, the junctions became
+pure overhead with no benefit — real directories are simpler, and the tooling doesn't need to
+create or maintain any link. `SETUP_WORKSPACE.ps1` remains useful for a fresh machine (verifying
+what's present, cloning what's missing directly into place), it just doesn't link anymore.
+
+Submodules were considered and rejected for the same underlying reason: git submodules pin an
+exact sibling commit and require an extra commit-and-push step in this repo every time a sibling
+repo moves forward, plus the usual detached-HEAD/`.gitmodules` friction on Windows. This suite
+doesn't need to pin versions — it just needs to find the sibling repos on disk and know their
+target branch/DLL name, which `suite.json` already records.
 
 ## Build/install pipeline
 

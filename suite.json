@@ -2,13 +2,15 @@
   "$comment": "Manifest for the Erenshor Mod Suite orchestration repo. Individual mod repos remain authoritative for their own source/history; this file only records where to find each one locally and how to build/install it. No source is duplicated here.",
   "owner": "forgetwhtuno",
   "workspaceRoot": "..",
-  "_workspaceRootNote": "Sibling repos are expected as siblings of this Erenshor-Mod-Suite checkout (i.e. C:\\Users\\<you>\\<RepoName>), matching how they were already cloned individually before this suite repo existed.",
+  "_workspaceRootNote": "workspaceRoot is the parent of this Erenshor-Mod-Suite checkout -- the single project root (e.g. ErenshorModsProject). Every mod with underMods=true resolves to <workspaceRoot>/<modsSubdir>/<localDir>; a mod with underMods=false (currently only SuiteHub) resolves to <workspaceRoot>/<localDir> directly, as a sibling of Erenshor-Mod-Suite itself. Real directories are expected here, not junctions -- SETUP_WORKSPACE.ps1 only clones what's missing, it does not link.",
+  "modsSubdir": "mods",
   "mods": [
     {
       "id": "DeepSims",
       "displayName": "Deep Sims",
       "repo": "DeepSim-erenshor",
       "localDir": "DeepSim-erenshor",
+      "underMods": true,
       "branch": "agent/lunaris-native-deepsims",
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
@@ -20,6 +22,7 @@
       "displayName": "Party Tools",
       "repo": "Erenshor-PartyTools",
       "localDir": "Erenshor-PartyTools",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorPartyTools.dll",
       "enabled": true,
@@ -31,6 +34,7 @@
       "displayName": "Contracts",
       "repo": "ErenshorContracts",
       "localDir": "ErenshorContracts",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorContracts.dll",
       "enabled": true,
@@ -42,6 +46,7 @@
       "displayName": "Journal",
       "repo": "ErenshorJournal",
       "localDir": "ErenshorJournal",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorJournal.dll",
       "enabled": true,
@@ -53,6 +58,7 @@
       "displayName": "Guild Life",
       "repo": "ErenshorGuildLife",
       "localDir": "ErenshorGuildLife",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorGuildLife.dll",
       "enabled": true,
@@ -64,6 +70,7 @@
       "displayName": "Campmaster",
       "repo": "Erenshor-Campmaster",
       "localDir": "Erenshor-Campmaster",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorCampmaster.dll",
       "enabled": true,
@@ -75,6 +82,7 @@
       "displayName": "Nemesis",
       "repo": "Erenshor-Nemesis",
       "localDir": "Erenshor-Nemesis",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorNemesis.dll",
       "enabled": true,
@@ -86,6 +94,7 @@
       "displayName": "Crafting Expanded",
       "repo": "Erenshor-Crafting-Expanded",
       "localDir": "Erenshor-Crafting-Expanded",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorCraftingExpanded.dll",
       "enabled": true,
@@ -96,18 +105,20 @@
       "id": "Duel",
       "displayName": "Practice Duel",
       "repo": "Erenshor-Duel",
-      "localDir": "Erenshor-Duel-migration",
+      "localDir": "Erenshor-Duel",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorDuel.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Local dir differs from repo name: C:\\Users\\<you>\\Erenshor-Duel is an older checkout with unreconciled uncommitted work on 'main' and is NOT built by this suite. The clean Lunaris checkout lives at Erenshor-Duel-migration. A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest."
+      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'Erenshor-Duel-migration' path to avoid clobbering older uncommitted work; that older checkout now lives at legacy-worktrees/Erenshor-Duel-old-main-dirty). A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest."
     },
     {
       "id": "PvP",
       "displayName": "PvP",
       "repo": "Erenshor-PvP",
       "localDir": "Erenshor-PvP",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorPvP.dll",
       "enabled": true,
@@ -118,37 +129,35 @@
       "id": "Follow",
       "displayName": "Follow",
       "repo": "ErenshorFollow",
-      "localDir": "ErenshorFollow-migration",
+      "localDir": "ErenshorFollow",
+      "underMods": true,
       "branch": "agent/lunaris-native",
       "dll": "ErenshorFollow.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Local dir differs from repo name: C:\\Users\\<you>\\ErenshorFollow is an older checkout with unreconciled uncommitted work on 'main' and is NOT built by this suite (see docs/CURRENT_WORK.md for the reconciliation classification -- most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported). The clean Lunaris checkout lives at ErenshorFollow-migration."
+      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'ErenshorFollow-migration' path; that older checkout now lives at legacy-worktrees/ErenshorFollow-old-main-dirty -- see docs/CURRENT_WORK.md for the reconciliation classification: most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported)."
     },
     {
       "id": "SuiteHub",
       "displayName": "Suite Hub",
       "repo": "ErenshorSuiteHub",
       "localDir": "ErenshorSuiteHub",
+      "underMods": false,
       "branch": "main",
       "dll": "ErenshorSuiteHub.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Phase 1 skeleton: compact MODS launcher, single Overview window (header-drag only, click-through guard), file-presence discovery of the other ten suite mods' plugin DLLs. Compile-verified and deterministic-test-verified only; never launched live. No per-mod tabs, no Aura API, no registration bridge to any other mod yet -- see the mod's own README.md/AGENTS.md."
+      "notes": "Phase 1 skeleton: compact MODS launcher, single Overview window (header-drag only, click-through guard), file-presence discovery of the other ten suite mods' plugin DLLs. Compile-verified and deterministic-test-verified only; never launched live. No per-mod tabs, no Aura API, no registration bridge to any other mod yet -- see the mod's own README.md/AGENTS.md. Lives as a sibling of Erenshor-Mod-Suite, not under mods/, since it's central tooling/UI rather than an individual gameplay mod."
     }
   ],
   "excluded": [
     {
-      "path": "Erenshor-Duel",
-      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See suite.json mods[].localDir note on 'Duel'."
+      "path": "legacy-worktrees/Erenshor-Duel-old-main-dirty",
+      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work (a real, still-unported party-Sim locality fix -- see docs/CURRENT_WORK.md). Not a build target."
     },
     {
-      "path": "ErenshorFollow",
-      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See suite.json mods[].localDir note on 'Follow'."
-    },
-    {
-      "path": "ErenshorLunarisBuilds",
-      "reason": "Plain build-output folder, not a git repo."
+      "path": "legacy-worktrees/ErenshorFollow-old-main-dirty",
+      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See docs/CURRENT_WORK.md for the reconciliation classification."
     }
   ]
 }
