@@ -124,6 +124,17 @@
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
       "notes": "Local dir differs from repo name: C:\\Users\\<you>\\ErenshorFollow is an older checkout with unreconciled uncommitted work on 'main' and is NOT built by this suite (see docs/CURRENT_WORK.md for the reconciliation classification -- most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported). The clean Lunaris checkout lives at ErenshorFollow-migration."
+    },
+    {
+      "id": "SuiteHub",
+      "displayName": "Suite Hub",
+      "repo": "ErenshorSuiteHub",
+      "localDir": "ErenshorSuiteHub",
+      "branch": "main",
+      "dll": "ErenshorSuiteHub.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Phase 1 skeleton: compact MODS launcher, single Overview window (header-drag only, click-through guard), file-presence discovery of the other ten suite mods' plugin DLLs. Compile-verified and deterministic-test-verified only; never launched live. No per-mod tabs, no Aura API, no registration bridge to any other mod yet -- see the mod's own README.md/AGENTS.md."
     }
   ],
   "excluded": [

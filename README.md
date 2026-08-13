@@ -19,6 +19,7 @@ exists to give one folder, one setup command, and one build/install command acro
 | Practice Duel | [Erenshor-Duel](https://github.com/forgetwhtuno/Erenshor-Duel) | needs live test |
 | PvP | [Erenshor-PvP](https://github.com/forgetwhtuno/Erenshor-PvP) | needs live test (combat itself already had a good live result) |
 | Follow | [ErenshorFollow](https://github.com/forgetwhtuno/ErenshorFollow) | needs live test |
+| Suite Hub | [ErenshorSuiteHub](https://github.com/forgetwhtuno/ErenshorSuiteHub) | needs live test (Phase 1 skeleton: launcher + Overview tab + mod discovery only) |
 
 Full detail: [docs/SUITE_STATUS.md](docs/SUITE_STATUS.md). Working notes: [docs/CURRENT_WORK.md](docs/CURRENT_WORK.md).
 
