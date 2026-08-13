@@ -1,0 +1,143 @@
+{
+  "$comment": "Manifest for the Erenshor Mod Suite orchestration repo. Individual mod repos remain authoritative for their own source/history; this file only records where to find each one locally and how to build/install it. No source is duplicated here.",
+  "owner": "forgetwhtuno",
+  "workspaceRoot": "..",
+  "_workspaceRootNote": "Sibling repos are expected as siblings of this Erenshor-Mod-Suite checkout (i.e. C:\\Users\\<you>\\<RepoName>), matching how they were already cloned individually before this suite repo existed.",
+  "mods": [
+    {
+      "id": "DeepSims",
+      "displayName": "Deep Sims",
+      "repo": "DeepSim-erenshor",
+      "localDir": "DeepSim-erenshor",
+      "branch": "agent/lunaris-native-deepsims",
+      "dll": "ErenshorDeepSims.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Roleplay central guard / subjective-routing / identity-crossref landed but not yet live-retested."
+    },
+    {
+      "id": "PartyTools",
+      "displayName": "Party Tools",
+      "repo": "Erenshor-PartyTools",
+      "localDir": "Erenshor-PartyTools",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorPartyTools.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Lunaris migration only, not yet live-retested this session."
+    },
+    {
+      "id": "Contracts",
+      "displayName": "Contracts",
+      "repo": "ErenshorContracts",
+      "localDir": "ErenshorContracts",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorContracts.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Player-ready gate, per-character data, launcher grip/deferred-toggle fix, and instance diagnostics landed. Needs a fresh live run to read the instance diagnostics and confirm the launcher fix."
+    },
+    {
+      "id": "Journal",
+      "displayName": "Journal",
+      "repo": "ErenshorJournal",
+      "localDir": "ErenshorJournal",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorJournal.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Known-good launcher interaction reference for the rest of the suite. Player-ready gate + per-character notes landed; click-open chain traces correctly but has not been proven live since that fix."
+    },
+    {
+      "id": "GuildLife",
+      "displayName": "Guild Life",
+      "repo": "ErenshorGuildLife",
+      "localDir": "ErenshorGuildLife",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorGuildLife.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Player-ready gate, per-character bulletin, launcher grip/deferred-toggle fix landed. Needs live retest."
+    },
+    {
+      "id": "Campmaster",
+      "displayName": "Campmaster",
+      "repo": "Erenshor-Campmaster",
+      "localDir": "Erenshor-Campmaster",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorCampmaster.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Lunaris migration only, not yet live-retested this session."
+    },
+    {
+      "id": "Nemesis",
+      "displayName": "Nemesis",
+      "repo": "Erenshor-Nemesis",
+      "localDir": "Erenshor-Nemesis",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorNemesis.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Lunaris migration only. Source of the verified player-ready-signal and character-key pattern reused by Journal/Contracts/GuildLife."
+    },
+    {
+      "id": "CraftingExpanded",
+      "displayName": "Crafting Expanded",
+      "repo": "Erenshor-Crafting-Expanded",
+      "localDir": "Erenshor-Crafting-Expanded",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorCraftingExpanded.dll",
+      "enabled": true,
+      "status": "BLOCKED",
+      "notes": "Still WIP per prior audit: missing LICENSE/NOTICE/CHANGELOG/SECURITY.md, intentionally excluded from the public-repo publish pass. Builds and installs fine; not yet treated as a finished suite member."
+    },
+    {
+      "id": "Duel",
+      "displayName": "Practice Duel",
+      "repo": "Erenshor-Duel",
+      "localDir": "Erenshor-Duel-migration",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorDuel.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Local dir differs from repo name: C:\\Users\\<you>\\Erenshor-Duel is an older checkout with unreconciled uncommitted work on 'main' and is NOT built by this suite. The clean Lunaris checkout lives at Erenshor-Duel-migration. A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest."
+    },
+    {
+      "id": "PvP",
+      "displayName": "PvP",
+      "repo": "Erenshor-PvP",
+      "localDir": "Erenshor-PvP",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorPvP.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Encounter/combat itself already had a good live result (do not touch). Launcher was rebuilt from a bare GUI.Toggle into a proper grip+button GUI.Window twice (quick-toggle-visibility fix, then drag/click-overlap fix); open-state mutation deferred out of OnGUI. Full PvpPanel drag-into-camera bug (Part 12 of the suite-direction task) is still UNRESOLVED. Natural ambush has not yet been observed live -- do not treat that as a failure, just untested."
+    },
+    {
+      "id": "Follow",
+      "displayName": "Follow",
+      "repo": "ErenshorFollow",
+      "localDir": "ErenshorFollow-migration",
+      "branch": "agent/lunaris-native",
+      "dll": "ErenshorFollow.dll",
+      "enabled": true,
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Local dir differs from repo name: C:\\Users\\<you>\\ErenshorFollow is an older checkout with unreconciled uncommitted work on 'main' and is NOT built by this suite (see docs/CURRENT_WORK.md for the reconciliation classification -- most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported). The clean Lunaris checkout lives at ErenshorFollow-migration."
+    }
+  ],
+  "excluded": [
+    {
+      "path": "Erenshor-Duel",
+      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See suite.json mods[].localDir note on 'Duel'."
+    },
+    {
+      "path": "ErenshorFollow",
+      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See suite.json mods[].localDir note on 'Follow'."
+    },
+    {
+      "path": "ErenshorLunarisBuilds",
+      "reason": "Plain build-output folder, not a git repo."
+    }
+  ]
+}

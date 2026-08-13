@@ -1,0 +1,10 @@
+# mods/<id> entries are NTFS junctions to sibling repos, created by SETUP_WORKSPACE.ps1.
+# Never commit their contents from here -- each mod repo owns its own history.
+mods/*
+
+# Local build staging (also lives under %TEMP%, this is a fallback in case anything writes here)
+bin/
+obj/
+*.dll
+*.pdb
+*.user
