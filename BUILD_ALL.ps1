@@ -1,22 +1,7 @@
-# Builds (and by default installs) every enabled mod in suite.json.
-#
-# Each mod keeps its own authoritative BUILD_AND_INSTALL.ps1 (own reference list, own build
-# quirks) rather than this script reimplementing csc invocation per mod -- that would duplicate
-# and drift from each repo's real build logic. Instead this script points every mod's own build
-# script at a disposable STAGING copy of the game folder (junctioned to the real
-# Erenshor_Data\Managed so no framework DLL is ever duplicated, plus a tiny copied Erenshor.exe
-# stub so each script's own "is this really the game folder" check passes), so every mod's DLL is
-# written to a private temp plugins\ folder first. Only after that mod's build genuinely succeeds
-# does this script copy its DLL into the REAL live plugins folder -- a failed or partial build
-# never touches the live install.
-#
-# Usage:
-#   powershell -File BUILD_ALL.ps1                        # build + test + install every enabled mod
-#   powershell -File BUILD_ALL.ps1 -BuildOnly              # build (+test) only, never touch live plugins
-#   powershell -File BUILD_ALL.ps1 -Mod PvP -Mod DeepSims  # only these mods
-#   powershell -File BUILD_ALL.ps1 -Skip CraftingExpanded  # every enabled mod except these
-#   powershell -File BUILD_ALL.ps1 -RunTests:$false        # skip each mod's RUN_TESTS.ps1
-#   powershell -File BUILD_ALL.ps1 -Clean                  # wipe the staging dir first
+# Build/test the selected suite into a private staging game first. Installation is a separate
+# final phase and occurs only if EVERY selected mod built and every declared offline test passed.
+# Individual mod BUILD_AND_INSTALL.ps1 files remain authoritative for compilation/reference lists.
+# No source checkout/reset/commit is performed here.
 
 param(
     [switch]$BuildOnly,
@@ -25,12 +10,17 @@ param(
     [string[]]$Mod = @(),
     [string[]]$Skip = @(),
     [bool]$RunTests = $true,
-    [string]$GameDir = ""
+    [string]$GameDir = "",
+    [string]$LunarisLibDir = "",
+    [switch]$AllowDirty,
+    [switch]$AllowGameRunning
 )
 
 $ErrorActionPreference = "Stop"
 $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Manifest = Get-Content (Join-Path $SuiteRoot "suite.json") -Raw | ConvertFrom-Json
+. (Join-Path $SuiteRoot "SuiteBuild.Common.ps1")
+$SuiteJson = Join-Path $SuiteRoot "suite.json"
+$Manifest = Get-Content $SuiteJson -Raw | ConvertFrom-Json
 $WorkspaceRoot = (Resolve-Path (Join-Path $SuiteRoot $Manifest.workspaceRoot)).Path
 if ($BuildOnly) { $Install = $false }
 
@@ -41,6 +31,7 @@ function Find-Game([string]$Explicit) {
         if ($pf) { $candidates += (Join-Path $pf "Steam\steamapps\common\Erenshor") }
     }
     foreach ($root in @((Join-Path ${env:ProgramFiles(x86)} "Steam"), (Join-Path $env:ProgramFiles "Steam"))) {
+        if (-not $root) { continue }
         $vdf = Join-Path $root "steamapps\libraryfolders.vdf"
         if (Test-Path $vdf) {
             [regex]::Matches((Get-Content $vdf -Raw), '"path"\s+"([^"]+)"') | ForEach-Object {
@@ -59,135 +50,158 @@ $RealGameDir = Find-Game $GameDir
 $RealManaged = Join-Path $RealGameDir "Erenshor_Data\Managed"
 $RealPlugins = Join-Path $RealGameDir "plugins"
 $ModsDir = Join-Path $WorkspaceRoot $Manifest.modsSubdir
-# DeepSim-erenshor's checkout carries the dev-reference copy of Lunaris.dll/0Harmony.dll that the
-# game install itself doesn't have anywhere under it; every mod's own build script needs it.
-$LunarisLibDir = Join-Path $ModsDir "DeepSim-erenshor\LunarisLibs"
+if ([string]::IsNullOrWhiteSpace($LunarisLibDir)) { $LunarisLibDir = Join-Path $ModsDir "DeepSim-erenshor\LunarisLibs" }
+$LunarisLibDir = (Resolve-Path $LunarisLibDir).Path
 
-foreach ($required in @(
-        (Join-Path $RealManaged "Assembly-CSharp.dll"),
-        (Join-Path $LunarisLibDir "Lunaris.dll"),
-        (Join-Path $LunarisLibDir "0Harmony.dll"),
-        (Join-Path $RealGameDir "Erenshor.exe")
-    )) {
+$assemblyCSharp = Join-Path $RealManaged "Assembly-CSharp.dll"
+$lunarisDll = Join-Path $LunarisLibDir "Lunaris.dll"
+$harmonyDll = Join-Path $LunarisLibDir "0Harmony.dll"
+foreach ($required in @($assemblyCSharp, $lunarisDll, $harmonyDll, (Join-Path $RealGameDir "Erenshor.exe"))) {
     if (-not (Test-Path $required)) { throw "Required file missing: $required" }
 }
+
+$selected = @($Manifest.mods | Where-Object { $_.enabled })
+if ($Mod.Count -gt 0) { $selected = @($selected | Where-Object { $Mod -contains $_.id }) }
+if ($Skip.Count -gt 0) { $selected = @($selected | Where-Object { $Skip -notcontains $_.id }) }
+if ($selected.Count -eq 0) { throw "No enabled mods matched the requested selection." }
 
 Write-Host "Game:    $RealGameDir" -ForegroundColor Cyan
 Write-Host "Managed: $RealManaged" -ForegroundColor Cyan
 Write-Host "Lunaris: $LunarisLibDir" -ForegroundColor Cyan
-Write-Host "Install: $Install (RunTests=$RunTests)" -ForegroundColor Cyan
+Write-Host "Install: $Install (RunTests=$RunTests AllowDirty=$AllowDirty)" -ForegroundColor Cyan
 
-# --- Staging area: a disposable stand-in game folder so every mod's own BUILD_AND_INSTALL.ps1
-# writes its DLL to a private plugins\ folder instead of the live one, with zero framework-DLL
-# duplication (junction, not copy) and zero interference between mods building in the same run.
 $Staging = Join-Path $env:TEMP "ErenshorSuiteBuildStaging"
+$StageManifestPath = Join-Path $Staging "suite-build.json"
 if ($Clean -and (Test-Path $Staging)) { Remove-Item $Staging -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $Staging | Out-Null
+if (Test-Path $StageManifestPath) { Remove-Item $StageManifestPath -Force }
+
+# Always recreate the game-data junction and exe stub so a prior run against another game install
+# cannot silently keep stale staging scaffolding.
 $StagingData = Join-Path $Staging "Erenshor_Data"
-if (-not (Test-Path $StagingData)) {
-    New-Item -ItemType Junction -Path $StagingData -Target (Join-Path $RealGameDir "Erenshor_Data") | Out-Null
+if (Test-Path $StagingData) {
+    $item = Get-Item $StagingData -Force
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { Remove-Item $StagingData -Force }
+    else { Remove-Item $StagingData -Recurse -Force }
 }
-$StagingExe = Join-Path $Staging "Erenshor.exe"
-if (-not (Test-Path $StagingExe)) { Copy-Item (Join-Path $RealGameDir "Erenshor.exe") $StagingExe -Force }
+New-Item -ItemType Junction -Path $StagingData -Target (Join-Path $RealGameDir "Erenshor_Data") | Out-Null
+Copy-Item (Join-Path $RealGameDir "Erenshor.exe") (Join-Path $Staging "Erenshor.exe") -Force
 $StagingPlugins = Join-Path $Staging "plugins"
 if (Test-Path $StagingPlugins) { Remove-Item $StagingPlugins -Recurse -Force }
 New-Item -ItemType Directory -Force -Path $StagingPlugins | Out-Null
 
-# --- Select mods ---
-$selected = $Manifest.mods | Where-Object { $_.enabled }
-if ($Mod.Count -gt 0) { $selected = $selected | Where-Object { $Mod -contains $_.id } }
-if ($Skip.Count -gt 0) { $selected = $selected | Where-Object { $Skip -notcontains $_.id } }
-
 $results = @()
+$stageEntries = @()
 
 foreach ($m in $selected) {
-    $underMods = $true
-    if ($m.PSObject.Properties.Name -contains "underMods") { $underMods = $m.underMods }
-    $modDir = if ($underMods) { Join-Path $ModsDir $m.localDir } else { Join-Path $WorkspaceRoot $m.localDir }
+    $modDir = Get-SuiteModDirectory $Manifest $WorkspaceRoot $m
     $buildScript = Join-Path $modDir "BUILD_AND_INSTALL.ps1"
-    $row = [PSCustomObject]@{
-        Mod       = $m.displayName
-        Build     = "SKIPPED"
-        Tests     = "-"
-        Installed = "-"
-        Sha256    = "-"
-    }
-
-    if (-not (Test-Path $modDir)) {
-        $row.Build = "FAILED (mod dir not found: $modDir; run SETUP_WORKSPACE.ps1)"
-        $results += $row
-        continue
-    }
-    if (-not (Test-Path $buildScript)) {
-        $row.Build = "FAILED (no BUILD_AND_INSTALL.ps1 in $modDir)"
-        $results += $row
-        continue
-    }
-
-    Write-Host "`n==== $($m.displayName) ====" -ForegroundColor Cyan
-    $stagedDll = Join-Path $StagingPlugins $m.dll
-    if (Test-Path $stagedDll) { Remove-Item $stagedDll -Force }
+    $row = [PSCustomObject]@{ Mod=$m.displayName; Source="-"; Build="SKIPPED"; Tests="-"; Installed="-"; Sha256="-" }
 
     try {
+        if (-not (Test-Path $modDir)) { throw "mod dir not found: $modDir; run SETUP_WORKSPACE.ps1" }
+        if (-not (Test-Path $buildScript)) { throw "no BUILD_AND_INSTALL.ps1 in $modDir" }
+        $repo = Get-SuiteRepoState $modDir $m.branch -AllowDirty:$AllowDirty
+        $row.Source = $repo.Branch + "@" + $repo.Sha.Substring(0, 12) + $(if ($repo.Dirty) { " (dirty)" } else { "" })
+
+        Write-Host "`n==== $($m.displayName) ====" -ForegroundColor Cyan
+        $stagedDll = Join-Path $StagingPlugins $m.dll
+        if (Test-Path $stagedDll) { Remove-Item $stagedDll -Force }
+
+        $global:LASTEXITCODE = 0
         & $buildScript -GameDir $Staging -LunarisLibDir $LunarisLibDir
         if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "build script exit code $LASTEXITCODE" }
-        if (-not (Test-Path $stagedDll)) { throw "build script reported success but $($m.dll) was not produced" }
+        if (-not (Test-Path $stagedDll)) { throw "build reported success but $($m.dll) was not produced" }
         $row.Build = "OK"
+
+        $declaredTests = @(Get-SuiteTestScripts $m)
+        if ($RunTests -and $declaredTests.Count -gt 0) {
+            $passed = @()
+            foreach ($relative in $declaredTests) {
+                Assert-SafeRelativePath $relative "testScripts entry for $($m.id)"
+                $testPath = Join-Path $modDir $relative
+                if (-not (Test-Path $testPath)) { throw "declared test script missing: $relative" }
+                Push-Location $modDir
+                try {
+                    $global:LASTEXITCODE = 0
+                    & $testPath
+                    if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "test script '$relative' exit code $LASTEXITCODE" }
+                }
+                finally { Pop-Location }
+                $passed += $relative
+            }
+            $row.Tests = "PASS (" + $passed.Count + " script" + $(if ($passed.Count -eq 1) { "" } else { "s" }) + ")"
+        }
+        elseif ($RunTests -and $m.testClass -eq "in_game_selftest") {
+            $row.Tests = "IN-GAME ONLY: " + $m.inGameSelfTest
+        }
+        elseif ($RunTests) { $row.Tests = "none declared" }
+        else { $row.Tests = "skipped" }
+
+        $hash = Get-Sha256 $stagedDll
+        $row.Sha256 = $hash.Substring(0, 16) + "..."
+        if ($Install) { $row.Installed = "pending suite pass" } else { $row.Installed = "no (BuildOnly)" }
+        $stageEntries += [PSCustomObject]@{
+            id=$m.id; displayName=$m.displayName; dll=$m.dll; branch=$repo.Branch; sourceSha=$repo.Sha;
+            dirty=[bool]$repo.Dirty; sha256=$hash; testClass=$m.testClass; tests=@($declaredTests)
+        }
     }
     catch {
-        $row.Build = "FAILED: $($_.Exception.Message)"
-        Write-Host "[$($m.displayName)] BUILD FAILED - $($_.Exception.Message)" -ForegroundColor Red
-        $results += $row
-        continue
+        $row.Build = if ($row.Build -eq "OK") { "FAILED AFTER BUILD" } else { "FAILED" }
+        $row.Tests = "FAIL: " + $_.Exception.Message
+        $candidate = Join-Path $StagingPlugins $m.dll
+        if (Test-Path $candidate) { Remove-Item $candidate -Force }
+        Write-Host "[$($m.displayName)] FAILED - $($_.Exception.Message)" -ForegroundColor Red
     }
-
-    if ($RunTests) {
-        $testScript = Join-Path $modDir "RUN_TESTS.ps1"
-        if (Test-Path $testScript) {
-            try {
-                Push-Location $modDir
-                & $testScript
-                if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "test script exit code $LASTEXITCODE" }
-                $row.Tests = "PASS"
-            }
-            catch {
-                $row.Tests = "FAIL: $($_.Exception.Message)"
-                Write-Host "[$($m.displayName)] TESTS FAILED - $($_.Exception.Message)" -ForegroundColor Red
-            }
-            finally { Pop-Location }
-        }
-        else {
-            $row.Tests = "none"
-        }
-    }
-    else {
-        $row.Tests = "skipped"
-    }
-
-    $hash = (Get-FileHash $stagedDll -Algorithm SHA256).Hash.ToLowerInvariant()
-    $row.Sha256 = $hash.Substring(0, 16) + "..."
-
-    if ($Install) {
-        $liveDll = Join-Path $RealPlugins $m.dll
-        # Atomic-enough final step: the fully-built, already-verified staged DLL is the only thing
-        # ever written to the live path, and only after everything above succeeded.
-        Copy-Item $stagedDll $liveDll -Force
-        $row.Installed = "yes"
-        Write-Host "[$($m.displayName)] installed -> $liveDll" -ForegroundColor Green
-    }
-    else {
-        $row.Installed = "no (BuildOnly)"
-    }
-
     $results += $row
+}
+
+$failed = @($results | Where-Object { $_.Build -like "FAILED*" -or $_.Tests -like "FAIL:*" })
+if ($failed.Count -gt 0 -or $stageEntries.Count -ne $selected.Count) {
+    Write-Host "`n==== Suite build summary ====" -ForegroundColor Cyan
+    $results | Format-Table -AutoSize
+    Write-Host "Selected suite did not pass as a complete set. No DLL from this run was installed and no reusable staging manifest was written." -ForegroundColor Yellow
+    exit 1
+}
+
+$stageManifest = [ordered]@{
+    schemaVersion = 1
+    builtUtc = [DateTime]::UtcNow.ToString("o")
+    suiteJsonSha256 = Get-Sha256 $SuiteJson
+    assemblyCSharpSha256 = Get-Sha256 $assemblyCSharp
+    lunarisSha256 = Get-Sha256 $lunarisDll
+    harmonySha256 = Get-Sha256 $harmonyDll
+    selectedIds = @($selected | ForEach-Object { $_.id })
+    entries = @($stageEntries)
+}
+$stageManifest | ConvertTo-Json -Depth 8 | Set-Content $StageManifestPath -Encoding UTF8
+
+if ($Install) {
+    if ((Test-ErenshorRunning) -and -not $AllowGameRunning) {
+        Write-Host "`nBuild/test passed and staging is reusable, but Erenshor is running. Nothing was installed." -ForegroundColor Yellow
+        Write-Host "Close the game and run INSTALL_ALL.ps1, or explicitly pass -AllowGameRunning if intentional hot reload is safe for this test." -ForegroundColor Yellow
+        $results | ForEach-Object { $_.Installed = "blocked: game running" }
+        $results | Format-Table -AutoSize
+        exit 2
+    }
+    $installItems = @()
+    foreach ($m in $selected) {
+        $entry = $stageEntries | Where-Object { $_.id -eq $m.id } | Select-Object -First 1
+        $source = Join-Path $StagingPlugins $m.dll
+        if ((Get-Sha256 $source) -ne $entry.sha256) { throw "staged hash changed before install: $($m.dll)" }
+        $installItems += [PSCustomObject]@{
+            Id=$m.id; DisplayName=$m.displayName; Source=$source; Destination=(Join-Path $RealPlugins $m.dll); ExpectedSha256=$entry.sha256
+        }
+    }
+    Install-SuiteSetTransactional $installItems
+    foreach ($item in $installItems) {
+        $row = $results | Where-Object { $_.Mod -eq $item.DisplayName } | Select-Object -First 1
+        $row.Installed = "yes"
+        Write-Host "[$($item.DisplayName)] installed -> $($item.Destination)" -ForegroundColor Green
+    }
 }
 
 Write-Host "`n==== Suite build summary ====" -ForegroundColor Cyan
 $results | Format-Table -AutoSize
-
-$failed = $results | Where-Object { $_.Build -like "FAILED*" -or $_.Tests -like "FAIL:*" }
-if ($failed.Count -gt 0) {
-    Write-Host "$($failed.Count) mod(s) failed. Nothing failed was installed." -ForegroundColor Yellow
-    exit 1
-}
+Write-Host "Staging manifest: $StageManifestPath" -ForegroundColor Cyan
 exit 0

@@ -15,7 +15,11 @@
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Roleplay central guard / subjective-routing / identity-crossref landed but not yet live-retested."
+      "notes": "Roleplay central guard / subjective-routing / identity-crossref landed but not yet live-retested.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "tests/RUN_DETERMINISTIC_TESTS.ps1"
+      ]
     },
     {
       "id": "PartyTools",
@@ -27,7 +31,11 @@
       "dll": "ErenshorPartyTools.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lunaris migration only, not yet live-retested this session."
+      "notes": "Lunaris migration only, not yet live-retested this session.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ]
     },
     {
       "id": "Contracts",
@@ -39,7 +47,11 @@
       "dll": "ErenshorContracts.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Player-ready gate, per-character data, launcher grip/deferred-toggle fix, and instance diagnostics landed. Needs a fresh live run to read the instance diagnostics and confirm the launcher fix."
+      "notes": "Player-ready gate, per-character data, launcher grip/deferred-toggle fix, and instance diagnostics landed. Needs a fresh live run to read the instance diagnostics and confirm the launcher fix.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ]
     },
     {
       "id": "Journal",
@@ -51,7 +63,11 @@
       "dll": "ErenshorJournal.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Known-good launcher interaction reference for the rest of the suite. Player-ready gate + per-character notes landed; click-open chain traces correctly but has not been proven live since that fix."
+      "notes": "Known-good launcher interaction reference for the rest of the suite. Player-ready gate + per-character notes landed; click-open chain traces correctly but has not been proven live since that fix.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ]
     },
     {
       "id": "GuildLife",
@@ -63,7 +79,11 @@
       "dll": "ErenshorGuildLife.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Player-ready gate, per-character bulletin, launcher grip/deferred-toggle fix landed. Needs live retest."
+      "notes": "Player-ready gate, per-character bulletin, launcher grip/deferred-toggle fix landed. Needs live retest.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ]
     },
     {
       "id": "Campmaster",
@@ -75,7 +95,12 @@
       "dll": "ErenshorCampmaster.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lunaris migration only, not yet live-retested this session."
+      "notes": "Lunaris migration only, not yet live-retested this session.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "tests/RUN_DETERMINISTIC_TESTS.ps1",
+        "tests/RUN_CONTROL_API_TESTS.ps1"
+      ]
     },
     {
       "id": "Nemesis",
@@ -87,7 +112,12 @@
       "dll": "ErenshorNemesis.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lunaris migration only. Source of the verified player-ready-signal and character-key pattern reused by Journal/Contracts/GuildLife."
+      "notes": "Lunaris migration only. Contains the earlier player-object readiness pattern reused by Journal/Contracts/GuildLife; live evidence now shows that pattern is too early for launcher presentation.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "tests/RUN_TESTS.ps1"
+      ],
+      "inGameSelfTest": "/enemesis selftest"
     },
     {
       "id": "CraftingExpanded",
@@ -99,7 +129,12 @@
       "dll": "ErenshorCraftingExpanded.dll",
       "enabled": true,
       "status": "BLOCKED",
-      "notes": "Still WIP per prior audit: missing LICENSE/NOTICE/CHANGELOG/SECURITY.md, intentionally excluded from the public-repo publish pass. Builds and installs fine; not yet treated as a finished suite member."
+      "notes": "Still WIP per prior audit: missing LICENSE/NOTICE/CHANGELOG/SECURITY.md, intentionally excluded from the public-repo publish pass. Builds and installs fine; not yet treated as a finished suite member.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "tests/RUN_TESTS.ps1"
+      ],
+      "inGameSelfTest": "/craftdiag"
     },
     {
       "id": "Duel",
@@ -111,7 +146,12 @@
       "dll": "ErenshorDuel.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'Erenshor-Duel-migration' path to avoid clobbering older uncommitted work; that older checkout now lives at legacy-worktrees/Erenshor-Duel-old-main-dirty). A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest."
+      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'Erenshor-Duel-migration' path to avoid clobbering older uncommitted work; that older checkout now lives at legacy-worktrees/Erenshor-Duel-old-main-dirty). A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "tests/RUN_TESTS.ps1"
+      ],
+      "inGameSelfTest": "/eduel selftest"
     },
     {
       "id": "PvP",
@@ -123,7 +163,10 @@
       "dll": "ErenshorPvP.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Encounter/combat itself already had a good live result (do not touch). Launcher was rebuilt from a bare GUI.Toggle into a proper grip+button GUI.Window twice (quick-toggle-visibility fix, then drag/click-overlap fix); open-state mutation deferred out of OnGUI. Full PvpPanel drag-into-camera bug (Part 12 of the suite-direction task) is still UNRESOLVED. Natural ambush has not yet been observed live -- do not treat that as a failure, just untested."
+      "notes": "Encounter/combat itself already had a good live result (do not touch). Launcher was rebuilt from a bare GUI.Toggle into a proper grip+button GUI.Window twice (quick-toggle-visibility fix, then drag/click-overlap fix); open-state mutation deferred out of OnGUI. Full PvpPanel drag-into-camera bug (Part 12 of the suite-direction task) is still UNRESOLVED. Natural ambush has not yet been observed live -- do not treat that as a failure, just untested.",
+      "testClass": "in_game_selftest",
+      "testScripts": [],
+      "inGameSelfTest": "/epvp selftest"
     },
     {
       "id": "Follow",
@@ -135,7 +178,12 @@
       "dll": "ErenshorFollow.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'ErenshorFollow-migration' path; that older checkout now lives at legacy-worktrees/ErenshorFollow-old-main-dirty -- see docs/CURRENT_WORK.md for the reconciliation classification: most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported)."
+      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'ErenshorFollow-migration' path; that older checkout now lives at legacy-worktrees/ErenshorFollow-old-main-dirty -- see docs/CURRENT_WORK.md for the reconciliation classification: most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported).",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ],
+      "inGameSelfTest": "/efollow diag"
     },
     {
       "id": "SuiteHub",
@@ -147,7 +195,11 @@
       "dll": "ErenshorSuiteHub.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Phase 1 skeleton: compact MODS launcher, single Overview window (header-drag only, click-through guard), file-presence discovery of the other ten suite mods' plugin DLLs. Compile-verified and deterministic-test-verified only; never launched live. No per-mod tabs, no Aura API, no registration bridge to any other mod yet -- see the mod's own README.md/AGENTS.md. Lives as a sibling of Erenshor-Mod-Suite, not under mods/, since it's central tooling/UI rather than an individual gameplay mod."
+      "notes": "Phase 2 core candidate: fully-ready lifecycle gate, single MODS launcher, installed-only navigation, Overview + honest module pages, optional versioned Aura bridge, input capture, and deterministic policy tests. No sibling mod implements the bridge in this snapshot yet; live verification remains required.",
+      "testClass": "standalone_deterministic",
+      "testScripts": [
+        "RUN_TESTS.ps1"
+      ]
     }
   ],
   "excluded": [
