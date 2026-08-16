@@ -38,8 +38,13 @@ foreach ($mod in $Manifest.mods) {
             $dirty = @((git status --porcelain --untracked-files=normal 2>$null)).Count -gt 0
         }
         finally { Pop-Location }
-        if ($branch -ne $mod.branch) {
-            $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "BRANCH MISMATCH (expected=$($mod.branch) actual=$branch head=$sha)" }
+        & git show-ref --verify --quiet "refs/heads/$($mod.branch)"
+        $localExpectedBranch = $LASTEXITCODE -eq 0
+        & git show-ref --verify --quiet "refs/remotes/origin/$($mod.branch)"
+        $remoteExpectedBranch = $LASTEXITCODE -eq 0
+        $expectedBranchExists = $localExpectedBranch -or $remoteExpectedBranch
+        if (-not $expectedBranchExists) {
+            $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "EXPECTED BRANCH MISSING (expected=$($mod.branch) active=$branch head=$sha)" }
         }
         elseif ($dirty) {
             $results += [PSCustomObject]@{ Mod = $mod.id; Path = $targetPath; Result = "DIRTY (branch=$branch head=$sha; BUILD_ALL requires -AllowDirty)" }

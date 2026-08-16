@@ -11,6 +11,9 @@ $ErrorActionPreference = "Stop"
 $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $SuiteRoot
 
+& (Join-Path $SuiteRoot "CHECK_COLLECTION_CONSISTENCY.ps1")
+if ($LASTEXITCODE -ne 0) { throw "Collection consistency check failed." }
+
 Write-Host "====================================================================" -ForegroundColor Cyan
 Write-Host "FORGOTTEN ROADS FOR ERENSHOR RELEASE GATE" -ForegroundColor Cyan
 Write-Host "Clean-source build + deterministic tests + whitelist packaging" -ForegroundColor Cyan
