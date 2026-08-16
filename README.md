@@ -1,9 +1,9 @@
-# Erenshor Mod Suite
-Central development/orchestration repo for forgetwhtuno's Erenshor Lunaris mod suite. This repo
+# Forgotten Roads for Erenshor
+Release coordination for the Forgotten Roads for Erenshor Lunaris mod collection. This repo
 does **not** contain mod source or history — each mod's own repo remains authoritative. This repo
 exists to give one folder, one setup command, and one build/install command across all of them.
 
-## Suite members
+## Collection members
 
 The current release-facing state is conservative: the supplied live log proves startup for all 12 suite modules, with additional partial evidence for several modules, while deterministic/build/hash gates still need to run on the actual Windows project.
 
