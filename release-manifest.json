@@ -1,366 +1,377 @@
-﻿{
-    "schemaVersion":  2,
-    "generatedFrom":  "FINAL_RC_BUILD_RECEIPT.json",
-    "candidateId":  "eren-suite-final-rc-20260815-210637",
-    "publicIdentity":  {
-                           "author":  "forgetwhtuno",
-                           "email":  "314876526+forgetwhtuno@users.noreply.github.com"
-                       },
-    "buildEnvironmentStatus":  "PASS",
-    "deterministicSuites":  "PASS",
-    "buildSet":  "PASS",
-    "installedSet":  "PASS_HASH_VERIFIED",
-    "activePluginAudit":  "PASS_12_CANONICAL_0_SUSPICIOUS",
-    "liveCertification":  "PENDING_ORDERED_MATRIX",
-    "mods":  [
-                 {
-                     "modId":  "DeepSims",
-                     "displayName":  "Deep Sims",
-                     "version":  "0.7.3",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorDeepSims.dll",
-                     "sha256":  "6349a2d038015534ea99bf5c0cbd9327363b0c67cb670317eeadacc2e837a540",
-                     "installedSha256":  "6349a2d038015534ea99bf5c0cbd9327363b0c67cb670317eeadacc2e837a540",
-                     "sourceRevisionBuildMarker":  "tree-sha256:2577746b836fac99d2c05b0766274f56e180a72227a3d811be2b317d9154fb7d",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_DETERMINISTIC_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate live conversation must prove direct relevance, party back-and-forth, Wiki/news routing, session reference, and no party-state contradiction."
-                                       ]
-                 },
-                 {
-                     "modId":  "PartyTools",
-                     "displayName":  "Party Tools",
-                     "version":  "0.1.5",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorPartyTools.dll",
-                     "sha256":  "b11e60f9425bb1a02d2272e9393446ee4d982c65594bc341c4f47c14406bb5ad",
-                     "installedSha256":  "b11e60f9425bb1a02d2272e9393446ee4d982c65594bc341c4f47c14406bb5ad",
-                     "sourceRevisionBuildMarker":  "tree-sha256:c42b512e7871c7e39c94c38773e99d0fdf3f45fbf69048013a3815dbf3a36bd6",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate retained panel, drag/camera containment, commands, and multi-zone continuity are not yet live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "Contracts",
-                     "displayName":  "Contracts",
-                     "version":  "0.4.1",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorContracts.dll",
-                     "sha256":  "ed19a9ddbdc5878640a3121c18af928f21ac2c78c9e960d0f73f2fa0e93c1fee",
-                     "installedSha256":  "ed19a9ddbdc5878640a3121c18af928f21ac2c78c9e960d0f73f2fa0e93c1fee",
-                     "sourceRevisionBuildMarker":  "tree-sha256:a07d3b6a1496271c12041cd0fd3df30fa7ee9f0142f6ce4f619b5de0251ccd43",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Mandatory live loop is unproven: accept -\u003e complete -\u003e claim gold + XP -\u003e no duplicate -\u003e restart -\u003e persisted state; raid-state claim deferral must also pass."
-                                       ]
-                 },
-                 {
-                     "modId":  "Journal",
-                     "displayName":  "Journal",
-                     "version":  "0.1.7",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorJournal.dll",
-                     "sha256":  "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
-                     "installedSha256":  "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
-                     "sourceRevisionBuildMarker":  "tree-sha256:ab03a9fa7faca757d55376634288764435a10aa388b2f76b2e22087e78108067",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate open/edit/collapse/drag/camera containment plus restart persistence are not yet live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "GuildLife",
-                     "displayName":  "Guild Life",
-                     "version":  "0.1.2",
-                     "classification":  "ORANGE BLOCKED",
-                     "dllFilename":  "ErenshorGuildLife.dll",
-                     "sha256":  "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
-                     "installedSha256":  "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
-                     "sourceRevisionBuildMarker":  "tree-sha256:16b2ffbf1647e5c1e2dff5dd2943bb6f5795bf26ec0438410bb865adff79669b",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Owning UI workstream reports camera containment is incomplete: gesture ownership is acquired too late and no verified Harmony CameraController.UsingUI patch exists."
-                                       ]
-                 },
-                 {
-                     "modId":  "Campmaster",
-                     "displayName":  "Campmaster",
-                     "version":  "0.4.0",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorCampmaster.dll",
-                     "sha256":  "c8d80035672c581f9a740c14dc37ff251be8a7039819cd0499a6368bea0a6549",
-                     "installedSha256":  "c8d80035672c581f9a740c14dc37ff251be8a7039819cd0499a6368bea0a6549",
-                     "sourceRevisionBuildMarker":  "tree-sha256:ee6149715581d6025e7f657c7cacdacf41fbb60fa35485330284fca8a783b2d5",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_DETERMINISTIC_TESTS.ps1",
-                                                                "tests/RUN_CONTROL_API_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate startup, Relax/camp lifecycle, zoning, and restart smoke are not yet live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "Nemesis",
-                     "displayName":  "Nemesis",
-                     "version":  "0.2.0",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorNemesis.dll",
-                     "sha256":  "33bbaa6a2553b6d9a077debf7dbd447d75a1191729901c33c382dbfcd45cc403",
-                     "installedSha256":  "33bbaa6a2553b6d9a077debf7dbd447d75a1191729901c33c382dbfcd45cc403",
-                     "sourceRevisionBuildMarker":  "tree-sha256:3a854d705c7df455eef80eac76ee3ab8177e08946571a733d90c941c1fb43058",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate startup, rival selection/state, zoning, and restart persistence are not yet live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "CraftingExpanded",
-                     "displayName":  "Crafting Expanded",
-                     "version":  "0.2.3",
-                     "classification":  "ORANGE BLOCKED",
-                     "dllFilename":  "ErenshorCraftingExpanded.dll",
-                     "sha256":  "c26f8c5ceaa2ce769318a90809f3f1742ff7f3f99026b7dd6e7856aaf718d198",
-                     "installedSha256":  "c26f8c5ceaa2ce769318a90809f3f1742ff7f3f99026b7dd6e7856aaf718d198",
-                     "sourceRevisionBuildMarker":  "tree-sha256:6f20865fa893a99549869b38351d3952c74f9e1bf0f0fdd6b9c57216832a6a20",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Full native crafting RC remains blocked because the production native-recipe binding is fail-closed; package is a Foraging/Crafting Preview. Gather, custom icons/presentation, and combat eligibility still require exact-candidate live proof."
-                                       ]
-                 },
-                 {
-                     "modId":  "Duel",
-                     "displayName":  "Practice Duel",
-                     "version":  "0.4.1",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorDuel.dll",
-                     "sha256":  "65f225a13171909e7ee86b5d1a7fb5ee0daa0f43e8b37e220b27356fe1f96eb3",
-                     "installedSha256":  "65f225a13171909e7ee86b5d1a7fb5ee0daa0f43e8b37e220b27356fe1f96eb3",
-                     "sourceRevisionBuildMarker":  "tree-sha256:79d6e2cebdcb432235f162ed1f768f6027608b98c57307207113bcf0bcd268ac",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate UI/camera containment and a complete duel lifecycle are not yet live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "PvP",
-                     "displayName":  "PvP",
-                     "version":  "0.5.2",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorPvP.dll",
-                     "sha256":  "c29f852b2a9e4e26026175d50103a70bdce260117bae3eccc66d4b4f6c398bb2",
-                     "installedSha256":  "c29f852b2a9e4e26026175d50103a70bdce260117bae3eccc66d4b4f6c398bb2",
-                     "sourceRevisionBuildMarker":  "tree-sha256:93512533d60f404fc83cf2739426b06909a66af7f75881f9d913573a1ebb4bab",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "tests/RUN_UI_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "A complete exact-candidate match from spawn through combat, cleanup, reward, zoning, and restart has not been live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "Follow",
-                     "displayName":  "Follow",
-                     "version":  "0.6.4",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorFollow.dll",
-                     "sha256":  "0999128d5c36c4733d04c940cda19e14a2b7e3df1c9a7f6d3cb2605beff3f3c3",
-                     "installedSha256":  "0999128d5c36c4733d04c940cda19e14a2b7e3df1c9a7f6d3cb2605beff3f3c3",
-                     "sourceRevisionBuildMarker":  "tree-sha256:4094a3e054305786cb38f1af045f6bfb4c5fb6f9bbd2af2fbe28375ab3f1eb20",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "One continuous multi-hop expedition on the exact integrated DLL has not been live-proven."
-                                       ]
-                 },
-                 {
-                     "modId":  "SuiteHub",
-                     "displayName":  "Suite Hub",
-                     "version":  "0.5.2",
-                     "classification":  "YELLOW RC NEAR READY",
-                     "dllFilename":  "ErenshorSuiteHub.dll",
-                     "sha256":  "cf430fd2dddc28fd06214059c6fa69e52ef76c6dbd7e3e8393392833a23812f9",
-                     "installedSha256":  "cf430fd2dddc28fd06214059c6fa69e52ef76c6dbd7e3e8393392833a23812f9",
-                     "sourceRevisionBuildMarker":  "tree-sha256:d7800bfdbdf8c47dbe17a2924a9685be8c8dde59ef164b0ff4fee800b00fb93d",
-                     "deterministicTests":  {
-                                                "status":  "PASS",
-                                                "scripts":  [
-                                                                "RUN_TESTS.ps1"
-                                                            ],
-                                                "note":  "Exact candidate build gate"
-                                            },
-                     "compile":  "PASS",
-                     "install":  "PASS_HASH_VERIFIED",
-                     "liveTestStatus":  {
-                                            "exactCandidate":  "NOT_RUN",
-                                            "startupVersion":  "NOT_RUN",
-                                            "uiSmoke":  "NOT_RUN",
-                                            "zoneTransition":  "NOT_RUN",
-                                            "persistenceReload":  "NOT_RUN"
-                                        },
-                     "knownBlockers":  [
-                                           "Exact-candidate startup versions, arrows, launcher/page routing, drag/camera containment, and multi-zone behavior are not yet live-proven."
-                                       ]
-                 }
-             ]
+{
+  "schemaVersion": 2,
+  "generatedFrom": "FINAL_RC_BUILD_RECEIPT.json",
+  "candidateId": "forgotten-roads-ws3-current-source-pending-rebuild",
+  "publicIdentity": {
+    "author": "forgetwhtuno",
+    "email": "314876526+forgetwhtuno@users.noreply.github.com"
+  },
+  "buildEnvironmentStatus": "PENDING_CURRENT_MACHINE",
+  "deterministicSuites": "PENDING_CURRENT_POWERSHELL_RUN",
+  "buildSet": "REQUIRES_REBUILD_OWNED_MODULES",
+  "installedSet": "REQUIRES_REINSTALL_AND_HASH_VERIFY",
+  "activePluginAudit": "REQUIRES_LUNARIS_IDENTITY_AUDIT",
+  "liveCertification": "PENDING_PVP_5V5_X2_AND_HUB_ZONE_MATRIX",
+  "mods": [
+    {
+      "modId": "DeepSims",
+      "displayName": "Deep Sims",
+      "version": "0.7.4",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorDeepSims.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_DETERMINISTIC_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled 0.7.4 source requires deterministic build plus live opinion/banter/rejection/preemption matrix.",
+        "Exact-candidate live conversation must prove direct relevance, party back-and-forth, Wiki/news routing, session reference, and no party-state contradiction."
+      ]
+    },
+    {
+      "modId": "PartyTools",
+      "displayName": "Party Tools",
+      "version": "0.1.6",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorPartyTools.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled collapse chrome requires mouse/camera/zone regression.",
+        "Exact-candidate retained panel, drag/camera containment, commands, and multi-zone continuity are not yet live-proven."
+      ]
+    },
+    {
+      "modId": "Contracts",
+      "displayName": "Contracts",
+      "version": "0.4.4",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorContracts.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled 0.4.4 source requires current-zone Local board, target-quality, and exactly-once Gold/XP live claim proof.",
+        "Mandatory live loop is unproven: accept -> complete -> claim gold + XP -> no duplicate -> restart -> persisted state; raid-state claim deferral must also pass."
+      ]
+    },
+    {
+      "modId": "Journal",
+      "displayName": "Journal",
+      "version": "0.1.8",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorJournal.dll",
+      "sha256": "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
+      "installedSha256": "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
+      "sourceRevisionBuildMarker": "tree-sha256:ab03a9fa7faca757d55376634288764435a10aa388b2f76b2e22087e78108067",
+      "deterministicTests": {
+        "status": "PASS",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "PASS",
+      "install": "PASS_HASH_VERIFIED",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN",
+        "startupVersion": "NOT_RUN",
+        "uiSmoke": "NOT_RUN",
+        "zoneTransition": "NOT_RUN",
+        "persistenceReload": "NOT_RUN"
+      },
+      "knownBlockers": [
+        "Exact-candidate open/edit/collapse/drag/camera containment plus restart persistence are not yet live-proven."
+      ]
+    },
+    {
+      "modId": "GuildLife",
+      "displayName": "Guild Life",
+      "version": "0.1.3",
+      "classification": "ORANGE BLOCKED",
+      "dllFilename": "ErenshorGuildLife.dll",
+      "sha256": "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
+      "installedSha256": "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
+      "sourceRevisionBuildMarker": "tree-sha256:16b2ffbf1647e5c1e2dff5dd2943bb6f5795bf26ec0438410bb865adff79669b",
+      "deterministicTests": {
+        "status": "PASS",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "PASS",
+      "install": "PASS_HASH_VERIFIED",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN",
+        "startupVersion": "NOT_RUN",
+        "uiSmoke": "NOT_RUN",
+        "zoneTransition": "NOT_RUN",
+        "persistenceReload": "NOT_RUN"
+      },
+      "knownBlockers": [
+        "Owning UI workstream reports camera containment is incomplete: gesture ownership is acquired too late and no verified Harmony CameraController.UsingUI patch exists."
+      ]
+    },
+    {
+      "modId": "Campmaster",
+      "displayName": "Campmaster",
+      "version": "0.4.0",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorCampmaster.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_DETERMINISTIC_TESTS.ps1",
+          "tests/RUN_CONTROL_API_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Packet documentation/discoverability candidate changed; regenerate exact-candidate release metadata after shared fallback reconciliation.",
+        "Exact-candidate startup, Relax/camp lifecycle, zoning, and restart smoke are not yet live-proven."
+      ]
+    },
+    {
+      "modId": "Nemesis",
+      "displayName": "Nemesis",
+      "version": "0.2.0",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorNemesis.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled native Friend/Guild candidate policy requires live native-roster validation.",
+        "Exact-candidate startup, rival selection/state, zoning, and restart persistence are not yet live-proven."
+      ]
+    },
+    {
+      "modId": "CraftingExpanded",
+      "displayName": "Crafting Expanded",
+      "version": "0.2.4",
+      "classification": "ORANGE BLOCKED",
+      "dllFilename": "ErenshorCraftingExpanded.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled collapse chrome requires Crafting/Foraging UI regression.",
+        "Full native crafting RC remains blocked because the production native-recipe binding is fail-closed; package is a Foraging/Crafting Preview. Gather, custom icons/presentation, and combat eligibility still require exact-candidate live proof."
+      ]
+    },
+    {
+      "modId": "Duel",
+      "displayName": "Practice Duel",
+      "version": "0.4.1",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorDuel.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Packet documentation/discoverability candidate changed; regenerate exact-candidate release metadata after shared fallback reconciliation.",
+        "Exact-candidate UI/camera containment and a complete duel lifecycle are not yet live-proven."
+      ]
+    },
+    {
+      "modId": "PvP",
+      "displayName": "PvP",
+      "version": "0.5.4",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorPvP.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "tests/RUN_UI_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled packet changed this exact release candidate; regenerate deterministic/build/install/live evidence before certification.",
+        "Run current Lunaris recursive plugin-identity audit and prove exactly one ErenshorPvP identity.",
+        "Run two consecutive live 5v5 matches: native maintenance clean, terminal cleanup clean, XP/gold correct, second match fresh."
+      ]
+    },
+    {
+      "modId": "Follow",
+      "displayName": "Follow",
+      "version": "0.6.4",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorFollow.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Packet documentation/discoverability candidate changed; preserve previously proven Azure route while regenerating exact-candidate metadata.",
+        "One continuous multi-hop expedition on the exact integrated DLL has not been live-proven."
+      ]
+    },
+    {
+      "modId": "SuiteHub",
+      "displayName": "Suite Hub",
+      "version": "0.5.3",
+      "classification": "YELLOW RC NEAR READY",
+      "dllFilename": "ErenshorSuiteHub.dll",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
+      "deterministicTests": {
+        "status": "NOT_RUN_RECONCILED_SOURCE",
+        "scripts": [
+          "RUN_TESTS.ps1"
+        ],
+        "note": "Exact candidate build gate"
+      },
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
+      "liveTestStatus": {
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
+      },
+      "knownBlockers": [
+        "Reconciled packet changed this exact release candidate; regenerate deterministic/build/install/live evidence before certification.",
+        "Live Hub must discover nested Lunaris plugin installs, retain one root through zoning, and mouse-open all installed module providers."
+      ]
+    }
+  ]
 }

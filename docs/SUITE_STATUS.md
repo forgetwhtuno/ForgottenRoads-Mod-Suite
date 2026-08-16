@@ -20,9 +20,9 @@ This document describes the current public release posture. Individual module re
 | Nemesis | 0.2.0 | Source/test evidence | Rival selection, lifecycle, duplicate prevention, zoning, and persistence validation |
 | Crafting Expanded | 0.2.3 | Source, deterministic tests, and candidate build evidence | Foraging/crafting preview matrix; native production recipe proof remains blocked |
 | Practice Duel | 0.4.1 | Source, deterministic tests, and candidate build evidence | Complete local-party duel lifecycle validation |
-| PvP | 0.5.2 | Source, deterministic tests, and candidate build evidence | Complete match, cleanup, reward, zoning, and restart validation |
+| PvP | 0.5.4 | Source, deterministic tests, and candidate build evidence | Complete match, cleanup, reward, zoning, and restart validation |
 | Follow | 0.6.4 | Source, deterministic tests, and candidate build evidence | One continuous multi-hop expedition on the exact candidate DLL |
-| Suite Hub | 0.5.2 | Source, deterministic tests, and candidate build evidence | Hub launch, dock/UI arrows, camera containment, and module routing validation |
+| Suite Hub | 0.5.3 | Source, deterministic tests, and candidate build evidence | Hub launch, dock/UI arrows, camera containment, and module routing validation |
 
 ## Historical development notes
 

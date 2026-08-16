@@ -135,54 +135,260 @@ function Install-SuiteDllVerified {
     return $installedHash
 }
 
-function Get-SuspiciousSuiteDlls {
-    param(
-        [string]$PluginsDir,
-        $Manifest
-    )
+function Get-LunarisScanRootLabel {
+    return "<Erenshor>\plugins"
+}
+
+function Get-PluginRootRelativeLabel {
+    param([string]$PluginsDir, [string]$Path)
+    try {
+        $root = [IO.Path]::GetFullPath($PluginsDir).TrimEnd('\','/')
+        $full = [IO.Path]::GetFullPath($Path)
+        if ($full.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) {
+            $relative = $full.Substring($root.Length).TrimStart('\','/')
+            return (Get-LunarisScanRootLabel) + $(if ($relative) { "\" + $relative } else { "" })
+        }
+    }
+    catch { }
+    return (Get-LunarisScanRootLabel) + "\<unresolved>"
+}
+
+function Test-LunarisConfigPath {
+    param([string]$PluginsDir, [string]$Path)
+    try {
+        $root = [IO.Path]::GetFullPath($PluginsDir).TrimEnd('\','/')
+        $full = [IO.Path]::GetFullPath($Path)
+        if (-not $full.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) { return $false }
+        $relative = $full.Substring($root.Length).TrimStart('\','/')
+        $segments = @($relative -split '[\\/]')
+        for ($i = 0; $i -lt [Math]::Max(0, $segments.Count - 1); $i++) {
+            if ($segments[$i] -ieq 'config') { return $true }
+        }
+    }
+    catch { }
+    return $false
+}
+
+function Resolve-LunarisIdentityAssemblyPath {
+    param([string]$GameDir, [string]$LunarisLibDir = "")
+    $candidates = @()
+    # Identity auditing follows the running installation first. Developer refs are only a fallback
+    # when the current installation layout does not expose Lunaris.dll directly.
+    if ($GameDir) {
+        $candidates += Join-Path $GameDir "Lunaris.dll"
+        $candidates += Join-Path (Join-Path $GameDir "plugins") "Lunaris.dll"
+    }
+    if ($LunarisLibDir) { $candidates += Join-Path $LunarisLibDir "Lunaris.dll" }
+    foreach ($candidate in @($candidates | Select-Object -Unique)) {
+        if ($candidate -and (Test-Path -LiteralPath $candidate)) { return (Resolve-Path -LiteralPath $candidate).Path }
+    }
+    throw "Current Lunaris.dll was not found. Pass -LunarisLibDir pointing at the installed/current Lunaris reference."
+}
+
+function New-LunarisIdentityResolver {
+    param([string]$LunarisDll)
+    try {
+        if (-not (Test-Path -LiteralPath $LunarisDll)) { throw "Lunaris.dll missing" }
+        $assembly = [Reflection.Assembly]::LoadFrom((Resolve-Path -LiteralPath $LunarisDll).Path)
+        $type = $assembly.GetType("Lunaris.PluginAssemblyUtils", $false)
+        if ($null -eq $type) {
+            try { $type = @($assembly.GetTypes() | Where-Object { $_.Name -eq "PluginAssemblyUtils" } | Select-Object -First 1)[0] } catch { $type = $null }
+        }
+        if ($null -eq $type) { throw "PluginAssemblyUtils type not found" }
+        $flags = [Reflection.BindingFlags]::Static -bor [Reflection.BindingFlags]::Public -bor [Reflection.BindingFlags]::NonPublic
+        $method = $type.GetMethod("GetGuid", $flags, $null, [Type[]]@([string]), $null)
+        if ($null -eq $method) { throw "PluginAssemblyUtils.GetGuid(string) not found" }
+        return [PSCustomObject]@{ Healthy=$true; Method=$method; Error="" }
+    }
+    catch {
+        return [PSCustomObject]@{ Healthy=$false; Method=$null; Error=$_.Exception.GetType().Name }
+    }
+}
+
+function Get-LunarisPluginIdentityRecord {
+    param([string]$PluginsDir, [string]$Path, $Resolver)
+    $name = [IO.Path]::GetFileName($Path)
+    $record = [ordered]@{
+        FullPath = $Path
+        RelativePath = Get-PluginRootRelativeLabel -PluginsDir $PluginsDir -Path $Path
+        FileName = $name
+        Managed = $false
+        AssemblyName = ""
+        Identity = ""
+        IdentityStatus = "unmanaged"
+        Error = ""
+    }
+    try {
+        $assemblyName = [Reflection.AssemblyName]::GetAssemblyName($Path)
+        $record.Managed = $true
+        $record.AssemblyName = [string]$assemblyName.Name
+    }
+    catch {
+        return [PSCustomObject]$record
+    }
+
+    if ($null -eq $Resolver -or -not $Resolver.Healthy -or $null -eq $Resolver.Method) {
+        $record.IdentityStatus = "ambiguous"
+        $record.Error = if ($null -eq $Resolver) { "resolver unavailable" } else { [string]$Resolver.Error }
+        return [PSCustomObject]$record
+    }
+
+    try {
+        $identity = [string]$Resolver.Method.Invoke($null, @($Path))
+        if ([string]::IsNullOrWhiteSpace($identity)) { throw "empty plugin identity" }
+        $record.Identity = $identity
+        $record.IdentityStatus = "exact"
+    }
+    catch {
+        $record.IdentityStatus = "ambiguous"
+        $record.Error = $_.Exception.GetType().Name
+    }
+    return [PSCustomObject]$record
+}
+
+function Get-SuiteIdentityRowsFromRecords {
+    param($Manifest, $Records, [switch]$AllowMissing, [bool]$ResolverHealthy = $true)
     $rows = @()
-    $allDlls = @(Get-ChildItem -LiteralPath $PluginsDir -Filter "*.dll" -File -Recurse -ErrorAction SilentlyContinue)
+    $managedAmbiguous = @($Records | Where-Object { $_.Managed -and $_.IdentityStatus -ne "exact" })
     foreach ($m in @($Manifest.mods)) {
         $expectedName = [string]$m.dll
         $expectedStem = [IO.Path]::GetFileNameWithoutExtension($expectedName)
-        $canonical = @($allDlls | Where-Object { $_.Name -ieq $expectedName })
-        $lookalikes = @($allDlls | Where-Object {
-            $_.Name -ine $expectedName -and
-            $_.BaseName -match ("(?i)^" + [regex]::Escape($expectedStem) + '([ _\-\(\)\.\d]|old|backup|bak|copy|previous|disabled)')
+        $expectedId = if ($m.PSObject.Properties.Name -contains "pluginId") { [string]$m.pluginId } else { "" }
+        $identityMatches = @($Records | Where-Object { $_.IdentityStatus -eq "exact" -and $_.Identity -ceq $expectedId })
+        $filenameCandidates = @($Records | Where-Object {
+            $_.FileName -ieq $expectedName -or $_.FileName -match ("(?i)^" + [regex]::Escape($expectedStem) + '([ _\-\(\)\.\d]|old|backup|bak|copy|previous|disabled).*\.dll$')
         })
+        $filenameIdentityMismatch = @($filenameCandidates | Where-Object { $_.IdentityStatus -eq "exact" -and $_.Identity -cne $expectedId })
+        $filenameAmbiguous = @($filenameCandidates | Where-Object { $_.Managed -and $_.IdentityStatus -ne "exact" })
+        $missingAllowed = $AllowMissing -and $identityMatches.Count -eq 0
+        $healthy = $ResolverHealthy -and $managedAmbiguous.Count -eq 0 -and $filenameIdentityMismatch.Count -eq 0 -and $filenameAmbiguous.Count -eq 0 -and
+            ($identityMatches.Count -eq 1 -or $missingAllowed)
+        $status = if (-not $ResolverHealthy -or $managedAmbiguous.Count -gt 0 -or $filenameAmbiguous.Count -gt 0) { "AMBIGUOUS" }
+            elseif ($filenameIdentityMismatch.Count -gt 0) { "IDENTITY_MISMATCH" }
+            elseif ($identityMatches.Count -gt 1) { "DUPLICATE" }
+            elseif ($identityMatches.Count -eq 0) { if ($AllowMissing) { "MISSING_ALLOWED" } else { "MISSING" } }
+            else { "PASS" }
         $rows += [PSCustomObject]@{
             Id = [string]$m.id
+            DisplayName = [string]$m.displayName
             Dll = $expectedName
-            CanonicalCount = $canonical.Count
-            CanonicalPaths = @($canonical | ForEach-Object { $_.FullName })
-            SuspiciousPaths = @($lookalikes | ForEach-Object { $_.FullName })
-            Healthy = ($canonical.Count -eq 1 -and $lookalikes.Count -eq 0)
+            PluginId = $expectedId
+            DiscoverableCount = $identityMatches.Count
+            IdentityPaths = @($identityMatches | ForEach-Object { $_.RelativePath })
+            IdentityFullPaths = @($identityMatches | ForEach-Object { $_.FullPath })
+            FilenameMismatchPaths = @($filenameIdentityMismatch | ForEach-Object { $_.RelativePath })
+            FilenameAmbiguousPaths = @($filenameAmbiguous | ForEach-Object { $_.RelativePath })
+            Status = $status
+            Healthy = $healthy
         }
     }
     return $rows
 }
 
-function Move-ConfirmedBackupDlls {
+function Get-LunarisSuiteIdentityAudit {
     param(
-        $AuditRows,
+        [string]$PluginsDir,
+        $Manifest,
+        [string]$LunarisDll,
+        [switch]$AllowMissing
+    )
+    if (-not (Test-Path -LiteralPath $PluginsDir)) { New-Item -ItemType Directory -Force -Path $PluginsDir | Out-Null }
+    $resolver = New-LunarisIdentityResolver -LunarisDll $LunarisDll
+    $scanErrors = @()
+    $paths = @()
+    try {
+        $paths = @([IO.Directory]::EnumerateFiles((Resolve-Path -LiteralPath $PluginsDir).Path, "*.dll", [IO.SearchOption]::AllDirectories) |
+            Where-Object { -not (Test-LunarisConfigPath -PluginsDir $PluginsDir -Path $_) })
+    }
+    catch { $scanErrors += $_.Exception.GetType().Name }
+
+    $records = @()
+    foreach ($path in $paths) { $records += Get-LunarisPluginIdentityRecord -PluginsDir $PluginsDir -Path $path -Resolver $resolver }
+    $rows = @(Get-SuiteIdentityRowsFromRecords -Manifest $Manifest -Records $records -AllowMissing:$AllowMissing -ResolverHealthy:$resolver.Healthy)
+    $ambiguous = @($records | Where-Object { $_.Managed -and $_.IdentityStatus -ne "exact" })
+    $healthy = $resolver.Healthy -and $scanErrors.Count -eq 0 -and $ambiguous.Count -eq 0 -and @($rows | Where-Object { -not $_.Healthy }).Count -eq 0
+    return [PSCustomObject]@{
+        ScanRootLabel = Get-LunarisScanRootLabel
+        ResolverHealthy = [bool]$resolver.Healthy
+        ResolverError = [string]$resolver.Error
+        ScanErrors = @($scanErrors)
+        Records = @($records)
+        AmbiguousRecords = @($ambiguous)
+        Rows = @($rows)
+        Healthy = $healthy
+    }
+}
+
+function Move-ConfirmedSuiteBackupDlls {
+    param(
+        $Audit,
+        $Manifest,
         [string]$PluginsDir,
         [string]$QuarantineRoot
     )
     $moved = @()
-    foreach ($row in @($AuditRows)) {
-        foreach ($path in @($row.SuspiciousPaths)) {
-            $name = [IO.Path]::GetFileName($path)
-            if ($name -notmatch '(?i)(\(\d+\)|old|backup|bak|copy|previous)') { continue }
-            $resolved = (Resolve-Path $path).Path
-            if (-not $resolved.StartsWith((Resolve-Path $PluginsDir).Path, [StringComparison]::OrdinalIgnoreCase)) { continue }
+    if ($null -eq $Audit -or -not $Audit.ResolverHealthy) { return $moved }
+    $root = (Resolve-Path -LiteralPath $PluginsDir).Path
+    foreach ($m in @($Manifest.mods)) {
+        $expectedName = [string]$m.dll
+        $expectedId = [string]$m.pluginId
+        foreach ($record in @($Audit.Records | Where-Object { $_.IdentityStatus -eq "exact" -and $_.Identity -ceq $expectedId })) {
+            if ($record.FileName -ieq $expectedName) { continue }
+            if ($record.FileName -notmatch '(?i)(\(\d+\)|old|backup|bak|copy|previous)') { continue }
+            $resolved = (Resolve-Path -LiteralPath $record.FullPath).Path
+            if (-not $resolved.StartsWith($root, [StringComparison]::OrdinalIgnoreCase)) { continue }
             New-Item -ItemType Directory -Force -Path $QuarantineRoot | Out-Null
-            $target = Join-Path $QuarantineRoot $name
-            if (Test-Path $target) { $target = Join-Path $QuarantineRoot (([IO.Path]::GetFileNameWithoutExtension($name)) + "-" + [Guid]::NewGuid().ToString("N").Substring(0,8) + ".dll") }
+            $targetName = ([IO.Path]::GetFileNameWithoutExtension($record.FileName)) + "-" + $m.id + ".dll"
+            $target = Join-Path $QuarantineRoot $targetName
+            if (Test-Path -LiteralPath $target) {
+                $target = Join-Path $QuarantineRoot (([IO.Path]::GetFileNameWithoutExtension($targetName)) + "-" + [Guid]::NewGuid().ToString("N").Substring(0,8) + ".dll")
+            }
             Move-Item -LiteralPath $resolved -Destination $target
-            $moved += [PSCustomObject]@{ From=$resolved; To=$target }
+            $moved += [PSCustomObject]@{
+                Mod = [string]$m.id
+                From = [string]$record.RelativePath
+                To = "<Erenshor>\plugins-disabled\" + [IO.Path]::GetFileName($target)
+            }
         }
     }
     return $moved
+}
+
+function Assert-LunarisSuiteIdentityForInstall {
+    param($Audit, [string[]]$RequiredIds = @(), [switch]$AllowMissingOthers)
+    if ($null -eq $Audit) { throw "Plugin identity audit did not run." }
+    if (-not $Audit.ResolverHealthy) { throw "Lunaris plugin identity resolver unavailable; review required." }
+    if (@($Audit.ScanErrors).Count -gt 0) { throw "Lunaris plugin scan failed; review required." }
+    if (@($Audit.AmbiguousRecords).Count -gt 0) { throw "At least one managed plugin identity was unreadable/ambiguous; review required." }
+    foreach ($row in @($Audit.Rows)) {
+        if ($row.DiscoverableCount -gt 1) { throw "Duplicate discoverable plugin identity '$($row.PluginId)' for $($row.Id)." }
+        if (@($row.FilenameMismatchPaths).Count -gt 0 -or @($row.FilenameAmbiguousPaths).Count -gt 0) {
+            throw "Filename/identity ambiguity for $($row.Id); review required."
+        }
+        if ($RequiredIds -contains [string]$row.Id) {
+            if ($row.DiscoverableCount -ne 1) { throw "Required installed plugin identity missing for $($row.Id)." }
+        }
+        elseif (-not $AllowMissingOthers -and $row.DiscoverableCount -ne 1) {
+            throw "Expected installed plugin identity missing for $($row.Id)."
+        }
+    }
+}
+
+function Assert-LunarisSuiteIdentityPreInstall {
+    param($Audit, $InstallItems)
+    Assert-LunarisSuiteIdentityForInstall -Audit $Audit -AllowMissingOthers
+    foreach ($item in @($InstallItems)) {
+        $row = @($Audit.Rows | Where-Object { $_.Id -eq [string]$item.Id } | Select-Object -First 1)
+        if ($row.Count -ne 1) { throw "No identity-audit manifest row for $($item.Id)." }
+        $r = $row[0]
+        if ($r.DiscoverableCount -eq 0) { continue }
+        if ($r.DiscoverableCount -ne 1) { throw "Duplicate discoverable identity exists before install for $($item.Id)." }
+        $existing = [IO.Path]::GetFullPath([string]$r.IdentityFullPaths[0])
+        $destination = [IO.Path]::GetFullPath([string]$item.Destination)
+        if (-not [string]::Equals($existing, $destination, [StringComparison]::OrdinalIgnoreCase)) {
+            throw "Plugin identity '$($r.PluginId)' is already discoverable from a non-canonical path; review/quarantine before installing $($item.Id)."
+        }
+    }
 }
 
 function Test-ReleaseCandidateFile {
@@ -194,7 +400,7 @@ function Test-ReleaseCandidateFile {
     $lower = $RelativeName.ToLowerInvariant()
 
     $rejectNamePatterns = @(
-        'ai-handoff', 'chatgpt', 'patchpacket', 'patch-packet', 'patch-backup', '.patch-backups',
+        'ai-handoff', 'ai-export', 'assistant-handoff', 'assistant-export', 'patchpacket', 'patch-packet', 'patch-backup', '.patch-backups',
         '\blogs?\b', '\.lpcfg$', '\.pdb$', '\.tmp$', '\.bak$', '\.old$', '\.orig$',
         'assembly-csharp\.dll$', 'unityengine.*\.dll$', '^lunaris\.dll$', '^0harmony\.dll$'
     )

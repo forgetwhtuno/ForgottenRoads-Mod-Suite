@@ -2,6 +2,7 @@ $ErrorActionPreference = "Stop"
 $TestRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $SuiteRoot = Split-Path -Parent $TestRoot
 . (Join-Path $SuiteRoot "SuiteBuild.Common.ps1")
+. (Join-Path $SuiteRoot "Release.Common.ps1")
 $manifestPath = Join-Path $SuiteRoot "suite.json"
 $manifest = Get-Content $manifestPath -Raw | ConvertFrom-Json
 $workspace = (Resolve-Path (Join-Path $SuiteRoot $manifest.workspaceRoot)).Path
@@ -20,6 +21,7 @@ Assert-True ($manifest.owner -eq "forgetwhtuno") "public owner remains forgetwht
 Assert-True ($manifest.mods.Count -gt 0) "manifest contains modules"
 $ids = @{}
 $dlls = @{}
+$pluginIds = @{}
 foreach ($m in $manifest.mods) {
     Assert-True (-not [string]::IsNullOrWhiteSpace([string]$m.id)) "module id present"
     Assert-True (-not $ids.ContainsKey([string]$m.id)) "module ids unique: $($m.id)"
@@ -31,6 +33,11 @@ foreach ($m in $manifest.mods) {
     Assert-True ($m.PSObject.Properties.Name -contains "testScripts") "test scripts declared: $($m.id)"
     Assert-True ($m.PSObject.Properties.Name -contains "version") "version declared: $($m.id)"
     Assert-True ([string]$m.version -match '^\d+\.\d+\.\d+([-.+][0-9A-Za-z.-]+)?$') "version format: $($m.id)"
+    Assert-True ($m.PSObject.Properties.Name -contains "pluginId") "Lunaris plugin identity declared: $($m.id)"
+    Assert-True (-not [string]::IsNullOrWhiteSpace([string]$m.pluginId)) "Lunaris plugin identity nonempty: $($m.id)"
+    Assert-True (-not $pluginIds.ContainsKey([string]$m.pluginId)) "Lunaris plugin identities unique: $($m.pluginId)"
+    $pluginIds[[string]$m.pluginId] = $true
+    Assert-Equal ([IO.Path]::GetFileNameWithoutExtension([string]$m.dll)) ([string]$m.pluginId) "current native Forgotten Roads identity matches assembly name: $($m.id)"
 
     $modDir = Get-SuiteModDirectory $manifest $workspace $m
     foreach ($relative in @(Get-SuiteTestScripts $m)) {
@@ -88,6 +95,61 @@ try {
 }
 finally { if (Test-Path $txnRoot) { Remove-Item $txnRoot -Recurse -Force } }
 
+
+
+# Lunaris identity policy tests use synthetic scan records, so they prove duplicate semantics without
+# requiring a live plugins directory or loading Lunaris.dll.
+$canonicalPvp = [PSCustomObject]@{
+    FullPath="C:\fake\plugins\ErenshorPvP.dll"; RelativePath="<Erenshor>\plugins\ErenshorPvP.dll";
+    FileName="ErenshorPvP.dll"; Managed=$true; AssemblyName="ErenshorPvP"; Identity="ErenshorPvP"; IdentityStatus="exact"; Error=""
+}
+$oneRows = @(Get-SuiteIdentityRowsFromRecords -Manifest $manifest -Records @($canonicalPvp) -AllowMissing -ResolverHealthy $true)
+$onePvp = $oneRows | Where-Object { $_.Id -eq "PvP" } | Select-Object -First 1
+Assert-Equal "PASS" $onePvp.Status "one discoverable PvP identity passes even when other suite modules are absent"
+Assert-Equal 1 $onePvp.DiscoverableCount "one PvP identity counted"
+
+$renamedBackup = [PSCustomObject]@{
+    FullPath="C:\fake\plugins\backup\ErenshorPvP-old.dll"; RelativePath="<Erenshor>\plugins\backup\ErenshorPvP-old.dll";
+    FileName="ErenshorPvP-old.dll"; Managed=$true; AssemblyName="ErenshorPvP"; Identity="ErenshorPvP"; IdentityStatus="exact"; Error=""
+}
+$dupRows = @(Get-SuiteIdentityRowsFromRecords -Manifest $manifest -Records @($canonicalPvp,$renamedBackup) -AllowMissing -ResolverHealthy $true)
+$dupPvp = $dupRows | Where-Object { $_.Id -eq "PvP" } | Select-Object -First 1
+Assert-Equal "DUPLICATE" $dupPvp.Status "different filename with same Lunaris plugin identity is duplicate"
+Assert-Equal 2 $dupPvp.DiscoverableCount "duplicate identity count crosses nested/renamed candidates"
+
+$wrongIdentity = [PSCustomObject]@{
+    FullPath="C:\fake\plugins\ErenshorPvP.dll"; RelativePath="<Erenshor>\plugins\ErenshorPvP.dll";
+    FileName="ErenshorPvP.dll"; Managed=$true; AssemblyName="OtherPvP"; Identity="OtherPvP"; IdentityStatus="exact"; Error=""
+}
+$mismatchRows = @(Get-SuiteIdentityRowsFromRecords -Manifest $manifest -Records @($wrongIdentity) -AllowMissing -ResolverHealthy $true)
+$mismatchPvp = $mismatchRows | Where-Object { $_.Id -eq "PvP" } | Select-Object -First 1
+Assert-Equal "IDENTITY_MISMATCH" $mismatchPvp.Status "canonical filename declaring another identity fails safe"
+
+$ambiguous = [PSCustomObject]@{
+    FullPath="C:\fake\plugins\mystery.dll"; RelativePath="<Erenshor>\plugins\mystery.dll";
+    FileName="mystery.dll"; Managed=$true; AssemblyName="mystery"; Identity=""; IdentityStatus="ambiguous"; Error="probe"
+}
+$ambiguousRows = @(Get-SuiteIdentityRowsFromRecords -Manifest $manifest -Records @($ambiguous) -AllowMissing -ResolverHealthy $true)
+Assert-True (@($ambiguousRows | Where-Object { -not $_.Healthy }).Count -gt 0) "unreadable managed identity fails safe/review required"
+
+# Post-install validation is part of the transaction: if a later identity audit rejects the new
+# plugin set, the prior DLL must be restored rather than leaving a duplicate-prone install behind.
+$validationTxnRoot = Join-Path $env:TEMP ("ErenshorSuitePostAuditRollback_" + [Guid]::NewGuid().ToString("N"))
+try {
+    New-Item -ItemType Directory -Force -Path $validationTxnRoot | Out-Null
+    $source = Join-Path $validationTxnRoot "source.dll"
+    $dest = Join-Path $validationTxnRoot "live.dll"
+    Set-Content $source "new" -Encoding ASCII
+    Set-Content $dest "old" -Encoding ASCII
+    $postFailed = $false
+    try {
+        Install-SuiteSetTransactional @([PSCustomObject]@{Source=$source;Destination=$dest;ExpectedSha256=(Get-Sha256 $source)}) -PostInstallValidation { throw "identity audit rejected" }
+    }
+    catch { $postFailed = $true }
+    Assert-True $postFailed "post-install identity validation failure is surfaced"
+    Assert-Equal "old" ((Get-Content $dest -Raw).Trim()) "post-install identity failure rolls installed DLL back"
+}
+finally { if (Test-Path $validationTxnRoot) { Remove-Item $validationTxnRoot -Recurse -Force } }
 
 # Release whitelist must cover every suite module exactly once and may only name documentation
 # artifacts. Final DLLs come from the staged build manifest, never from a recursively copied tree.

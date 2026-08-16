@@ -16,12 +16,13 @@
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Social routing, bounded context/session memory, party-thread ownership, Wiki/news routing, and quiet diagnostics are integrated. Requires the ordered final live conversation matrix.",
+      "notes": "0.7.4 social-routing candidate: explicit opinion questions bypass factual retrieval, direct rejection fallback remains grounded, /dsbanter is a bounded connected A+B thread, and autonomous seed admission learns temporarily from verifier rejection. Requires full live A-F conversation matrix.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_DETERMINISTIC_TESTS.ps1"
       ],
-      "version": "0.7.3"
+      "version": "0.7.4",
+      "pluginId": "ErenshorDeepSims"
     },
     {
       "id": "PartyTools",
@@ -33,12 +34,13 @@
       "dll": "ErenshorPartyTools.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Accepted retained-UI/camera-ownership candidate; requires final integrated live UI validation.",
+      "notes": "Canonical retained collapse chrome integrated; Ready Check, rolls, Friends Online, camera ownership, and Suite fallback behavior require integrated live UI validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.1.5"
+      "version": "0.1.6",
+      "pluginId": "ErenshorPartyTools"
     },
     {
       "id": "Contracts",
@@ -50,12 +52,13 @@
       "dll": "ErenshorContracts.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Exactly-once gold plus personal-XP claim ledger and raid claim deferral are integrated. Must remain non-Green until the full accept/complete/claim/no-duplicate/restart persistence live loop passes.",
+      "notes": "0.4.4 locality/target-quality candidate: unaccepted Local offers follow current playable zone without zoning rerolls; accepted OriginZone and exactly-once Gold/personal-XP ledger remain preserved. Requires locality/target/claim live loop.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.4.1"
+      "version": "0.4.4",
+      "pluginId": "ErenshorContracts"
     },
     {
       "id": "Journal",
@@ -72,7 +75,8 @@
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.1.7"
+      "version": "0.1.8",
+      "pluginId": "ErenshorJournal"
     },
     {
       "id": "GuildLife",
@@ -89,7 +93,8 @@
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.1.2"
+      "version": "0.1.3",
+      "pluginId": "ErenshorGuildLife"
     },
     {
       "id": "Campmaster",
@@ -107,7 +112,8 @@
         "tests/RUN_DETERMINISTIC_TESTS.ps1",
         "tests/RUN_CONTROL_API_TESTS.ps1"
       ],
-      "version": "0.4.0"
+      "version": "0.4.0",
+      "pluginId": "ErenshorCampmaster"
     },
     {
       "id": "Nemesis",
@@ -119,13 +125,14 @@
       "dll": "ErenshorNemesis.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lunaris migration only. Contains the earlier player-object readiness pattern reused by Journal/Contracts/GuildLife; live evidence now shows that pattern is too early for launcher presentation.",
+      "notes": "Native social candidate selection is split into safe base, automatic non-Friend priority with Guild fallback, and deliberate explicit Friend selection. Requires current native Friends/Guild live validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/enemesis selftest",
-      "version": "0.2.0"
+      "version": "0.2.0",
+      "pluginId": "ErenshorNemesis"
     },
     {
       "id": "CraftingExpanded",
@@ -137,13 +144,14 @@
       "dll": "ErenshorCraftingExpanded.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Foraging gather transaction, local-hostile combat eligibility, custom presentation, and retained collapse polish are integrated. Production native recipes remain fail-closed; release designation is Foraging/Crafting Preview pending live proof.",
+      "notes": "Foraging/Crafting Preview with canonical left-side graphic collapse chrome. Crafting/Foraging gameplay was intentionally preserved; requires integrated live UI regression.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/craftdiag",
-      "version": "0.2.3"
+      "version": "0.2.4",
+      "pluginId": "ErenshorCraftingExpanded"
     },
     {
       "id": "Duel",
@@ -161,7 +169,8 @@
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/eduel selftest",
-      "version": "0.4.1"
+      "version": "0.4.1",
+      "pluginId": "ErenshorDuel"
     },
     {
       "id": "PvP",
@@ -173,13 +182,14 @@
       "dll": "ErenshorPvP.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lifecycle, cleanup, containment, reward claim marker, zoning delay, and retained drag/camera guards are integrated. Requires one complete final-candidate live match and restart proof.",
+      "notes": "0.5.4 duplicate-plugin identity/preflight and temporary-NPC maintenance diagnostics integrated with canonical collapse chrome. Requires current plugin-tree identity proof and two complete 5v5 live matches.",
       "testClass": "standalone_deterministic_plus_in_game_selftest",
       "testScripts": [
         "tests/RUN_UI_TESTS.ps1"
       ],
       "inGameSelfTest": "/epvp selftest",
-      "version": "0.5.2"
+      "version": "0.5.4",
+      "pluginId": "ErenshorPvP"
     },
     {
       "id": "Follow",
@@ -197,7 +207,8 @@
         "RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/efollow diag",
-      "version": "0.6.4"
+      "version": "0.6.4",
+      "pluginId": "ErenshorFollow"
     },
     {
       "id": "SuiteHub",
@@ -209,12 +220,13 @@
       "dll": "ErenshorSuiteHub.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Accepted retained-uGUI dock chevron, routing, fallback ownership, and pointer/camera containment candidate; requires final integrated live UI validation.",
+      "notes": "0.5.3 recursive Lunaris disk discovery and Aura-backed presence integration; preserve single retained root across zoning. Requires final aggregate mouse-discoverability test.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.5.2"
+      "version": "0.5.3",
+      "pluginId": "ErenshorSuiteHub"
     }
   ],
   "excluded": []

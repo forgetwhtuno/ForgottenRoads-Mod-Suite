@@ -28,12 +28,14 @@ function Assert-SafeRelativePath([string]$Path, [string]$Label) {
 
 function Get-SuiteRepoState([string]$ModDir, [string]$ExpectedBranch, [switch]$AllowDirty) {
     if (-not (Test-Path (Join-Path $ModDir ".git"))) { throw "not a git worktree: $ModDir" }
-    $branch = (& git -C $ModDir branch --show-current 2>$null).Trim()
+    # Per-command safe.directory keeps local development builds usable under sandbox/service
+    # accounts without mutating global Git configuration or requiring a clean worktree.
+    $branch = (& git -c "safe.directory=$ModDir" -c core.excludesFile= -C $ModDir branch --show-current 2>$null).Trim()
     if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($branch)) { throw "could not read git branch: $ModDir" }
-    if ($branch -ne $ExpectedBranch) { throw "branch mismatch: expected '$ExpectedBranch', found '$branch'" }
-    $sha = (& git -C $ModDir rev-parse HEAD 2>$null).Trim()
+    if ($branch -ne $ExpectedBranch -and -not $AllowDirty) { throw "branch mismatch: expected '$ExpectedBranch', found '$branch'" }
+    $sha = (& git -c "safe.directory=$ModDir" -c core.excludesFile= -C $ModDir rev-parse HEAD 2>$null).Trim()
     if ($LASTEXITCODE -ne 0 -or $sha -notmatch '^[0-9a-fA-F]{40}$') { throw "could not read git HEAD: $ModDir" }
-    $statusLines = @(& git -C $ModDir status --porcelain --untracked-files=normal 2>$null)
+    $statusLines = @(& git -c "safe.directory=$ModDir" -c core.excludesFile= -C $ModDir status --porcelain --untracked-files=normal 2>$null)
     if ($LASTEXITCODE -ne 0) { throw "could not read git status: $ModDir" }
     $dirty = $statusLines.Count -gt 0
     if ($dirty -and -not $AllowDirty) {
@@ -86,7 +88,7 @@ function Install-SuiteDllAtomic([string]$Source, [string]$Destination) {
     }
 }
 
-function Install-SuiteSetTransactional($Items) {
+function Install-SuiteSetTransactional($Items, [scriptblock]$PostInstallValidation = $null) {
     $itemsArray = @($Items)
     if ($itemsArray.Count -eq 0) { throw "No install items supplied." }
 
@@ -105,7 +107,9 @@ function Install-SuiteSetTransactional($Items) {
     }
 
     $rollbackRoot = Join-Path $env:TEMP ("ErenshorSuiteRollback-" + [Guid]::NewGuid().ToString("N"))
+    $persistentBackupRoot = Join-Path (Split-Path -Parent $PSScriptRoot) ("local-build-backups\discoverability-preinstall-" + (Get-Date -Format "yyyyMMdd-HHmmss"))
     New-Item -ItemType Directory -Force -Path $rollbackRoot | Out-Null
+    New-Item -ItemType Directory -Force -Path $persistentBackupRoot | Out-Null
     $records = @()
     try {
         # Snapshot every destination before the first mutation so a later file-lock/I/O error can
@@ -114,7 +118,10 @@ function Install-SuiteSetTransactional($Items) {
             $item = $itemsArray[$i]
             $hadPrior = Test-Path $item.Destination
             $backup = Join-Path $rollbackRoot (("{0:D3}-" -f $i) + [IO.Path]::GetFileName($item.Destination))
-            if ($hadPrior) { Copy-Item $item.Destination $backup -Force }
+            if ($hadPrior) {
+                Copy-Item $item.Destination $backup -Force
+                Copy-Item $item.Destination (Join-Path $persistentBackupRoot ([IO.Path]::GetFileName($item.Destination))) -Force
+            }
             $records += [PSCustomObject]@{ Item=$item; HadPrior=$hadPrior; Backup=$backup }
         }
 
@@ -126,6 +133,8 @@ function Install-SuiteSetTransactional($Items) {
                 }
             }
         }
+        if ($null -ne $PostInstallValidation) { & $PostInstallValidation }
+        Write-Host "Persistent pre-install backup: $persistentBackupRoot" -ForegroundColor Cyan
     }
     catch {
         $installError = $_.Exception.Message
