@@ -12,7 +12,7 @@ $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 $ProjectRoot = Split-Path -Parent $SuiteRoot
 
 Write-Host "====================================================================" -ForegroundColor Cyan
-Write-Host "ERENSHOR MOD SUITE RELEASE GATE" -ForegroundColor Cyan
+Write-Host "FORGOTTEN ROADS FOR ERENSHOR RELEASE GATE" -ForegroundColor Cyan
 Write-Host "Clean-source build + deterministic tests + whitelist packaging" -ForegroundColor Cyan
 Write-Host "Dirty worktrees are refused. This script performs NO Git writes." -ForegroundColor Yellow
 Write-Host "====================================================================" -ForegroundColor Cyan

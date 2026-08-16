@@ -1,5 +1,6 @@
 {
-  "$comment": "Manifest for the Erenshor Mod Suite orchestration repo. Individual mod repos remain authoritative for their own source/history; this file only records where to find each one locally and how to build/install it. No source is duplicated here.",
+  "$comment": "Manifest for the Forgotten Roads for Erenshor release-coordination repo. Individual mod repos remain authoritative for their own source/history; this file only records where to find each one locally and how to build/install it. No source is duplicated here.",
+  "displayName": "Forgotten Roads for Erenshor",
   "owner": "forgetwhtuno",
   "workspaceRoot": "..",
   "_workspaceRootNote": "workspaceRoot is the parent of this Erenshor-Mod-Suite checkout -- the single project root (e.g. ErenshorModsProject). Every mod with underMods=true resolves to <workspaceRoot>/<modsSubdir>/<localDir>; a mod with underMods=false (currently only SuiteHub) resolves to <workspaceRoot>/<localDir> directly, as a sibling of Erenshor-Mod-Suite itself. Real directories are expected here, not junctions -- SETUP_WORKSPACE.ps1 only clones what's missing, it does not link.",

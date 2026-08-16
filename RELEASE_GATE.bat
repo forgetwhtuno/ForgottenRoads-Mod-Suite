@@ -2,7 +2,7 @@
 setlocal
 set SCRIPT_DIR=%~dp0
 echo ============================================================
-echo ERENSHOR MOD SUITE RELEASE GATE
+echo FORGOTTEN ROADS FOR ERENSHOR RELEASE GATE
 echo Clean source only. Deterministic tests + whitelist package.
 echo ============================================================
 powershell -NoProfile -ExecutionPolicy Bypass -File "%SCRIPT_DIR%RELEASE_GATE.ps1" %*
