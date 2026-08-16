@@ -46,24 +46,29 @@ function Find-Game([string]$Explicit) {
     throw "Erenshor installation not found. Pass -GameDir 'C:\path\to\Erenshor'."
 }
 
-$RealGameDir = Find-Game $GameDir
-$RealManaged = Join-Path $RealGameDir "Erenshor_Data\Managed"
-$RealPlugins = Join-Path $RealGameDir "plugins"
+Import-Module (Join-Path $WorkspaceRoot "build\ErenshorLocalBuildSupport.psm1") -Force
+$buildEnv = Resolve-ErenshorBuildEnvironment -ProjectRoot $WorkspaceRoot -GameDir $GameDir -LunarisLibDir $LunarisLibDir
+$RealGameDir = $buildEnv.GameDir
+$RealManaged = $buildEnv.ManagedDir
+$RealPlugins = $buildEnv.PluginsDir
 $ModsDir = Join-Path $WorkspaceRoot $Manifest.modsSubdir
-if ([string]::IsNullOrWhiteSpace($LunarisLibDir)) { $LunarisLibDir = Join-Path $ModsDir "DeepSim-erenshor\LunarisLibs" }
-$LunarisLibDir = (Resolve-Path $LunarisLibDir).Path
+$LunarisLibDir = $buildEnv.LunarisLibDir
 
-$assemblyCSharp = Join-Path $RealManaged "Assembly-CSharp.dll"
-$lunarisDll = Join-Path $LunarisLibDir "Lunaris.dll"
-$harmonyDll = Join-Path $LunarisLibDir "0Harmony.dll"
-foreach ($required in @($assemblyCSharp, $lunarisDll, $harmonyDll, (Join-Path $RealGameDir "Erenshor.exe"))) {
-    if (-not (Test-Path $required)) { throw "Required file missing: $required" }
-}
+$assemblyCSharp = $buildEnv.AssemblyCSharp
+$lunarisDll = $buildEnv.Lunaris
+$harmonyDll = $buildEnv.Harmony
 
 $selected = @($Manifest.mods | Where-Object { $_.enabled })
 if ($Mod.Count -gt 0) { $selected = @($selected | Where-Object { $Mod -contains $_.id }) }
 if ($Skip.Count -gt 0) { $selected = @($selected | Where-Object { $Skip -notcontains $_.id }) }
 if ($selected.Count -eq 0) { throw "No enabled mods matched the requested selection." }
+
+if ($RunTests) {
+    Write-Host "`n==== Erenshor-Mod-Suite orchestration tests ====" -ForegroundColor Cyan
+    $global:LASTEXITCODE = 0
+    & (Join-Path $SuiteRoot "RUN_TESTS.ps1")
+    if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "Erenshor-Mod-Suite orchestration tests failed with exit code $LASTEXITCODE" }
+}
 
 Write-Host "Game:    $RealGameDir" -ForegroundColor Cyan
 Write-Host "Managed: $RealManaged" -ForegroundColor Cyan
@@ -142,8 +147,9 @@ foreach ($m in $selected) {
         $row.Sha256 = $hash.Substring(0, 16) + "..."
         if ($Install) { $row.Installed = "pending suite pass" } else { $row.Installed = "no (BuildOnly)" }
         $stageEntries += [PSCustomObject]@{
-            id=$m.id; displayName=$m.displayName; dll=$m.dll; branch=$repo.Branch; sourceSha=$repo.Sha;
-            dirty=[bool]$repo.Dirty; sha256=$hash; testClass=$m.testClass; tests=@($declaredTests)
+            id=$m.id; displayName=$m.displayName; version=$m.version; dll=$m.dll; branch=$repo.Branch; sourceSha=$repo.Sha;
+            dirty=[bool]$repo.Dirty; sha256=$hash; testClass=$m.testClass; testStatus=$(if ($RunTests -and $declaredTests.Count -gt 0) { "PASS" } elseif ($RunTests) { "NONE_OFFLINE" } else { "SKIPPED" }); tests=@($declaredTests);
+            liveSelfTest=$(if ($m.PSObject.Properties.Name -contains "inGameSelfTest") { [string]$m.inGameSelfTest } else { $null })
         }
     }
     catch {
