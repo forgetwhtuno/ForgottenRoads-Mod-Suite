@@ -29,6 +29,8 @@ foreach ($m in $manifest.mods) {
     Assert-True (-not [string]::IsNullOrWhiteSpace([string]$m.branch)) "branch declared: $($m.id)"
     Assert-True ($m.PSObject.Properties.Name -contains "testClass") "test class declared: $($m.id)"
     Assert-True ($m.PSObject.Properties.Name -contains "testScripts") "test scripts declared: $($m.id)"
+    Assert-True ($m.PSObject.Properties.Name -contains "version") "version declared: $($m.id)"
+    Assert-True ([string]$m.version -match '^\d+\.\d+\.\d+([-.+][0-9A-Za-z.-]+)?$') "version format: $($m.id)"
 
     $modDir = Get-SuiteModDirectory $manifest $workspace $m
     foreach ($relative in @(Get-SuiteTestScripts $m)) {
@@ -85,5 +87,34 @@ try {
     Assert-Equal "old-one" ((Get-Content $dest1 -Raw).Trim()) "earlier destination rolled back"
 }
 finally { if (Test-Path $txnRoot) { Remove-Item $txnRoot -Recurse -Force } }
+
+
+# Release whitelist must cover every suite module exactly once and may only name documentation
+# artifacts. Final DLLs come from the staged build manifest, never from a recursively copied tree.
+$releaseWhitelistPath = Join-Path $SuiteRoot "release-whitelist.json"
+Assert-True (Test-Path $releaseWhitelistPath) "release whitelist exists"
+$releaseWhitelist = Get-Content $releaseWhitelistPath -Raw | ConvertFrom-Json
+Assert-Equal 1 $releaseWhitelist.schemaVersion "release whitelist schema"
+Assert-Equal $manifest.mods.Count $releaseWhitelist.mods.Count "release whitelist covers all suite modules"
+$releaseIds = @{}
+foreach ($entry in @($releaseWhitelist.mods)) {
+    Assert-True (-not $releaseIds.ContainsKey([string]$entry.id)) "release whitelist ids unique: $($entry.id)"
+    $releaseIds[[string]$entry.id] = $true
+    $sourceMod = $manifest.mods | Where-Object { $_.id -eq $entry.id } | Select-Object -First 1
+    Assert-True ($null -ne $sourceMod) "release whitelist id is in suite manifest: $($entry.id)"
+    Assert-Equal ([string]$sourceMod.dll) ([string]$entry.dll) "release DLL matches manifest: $($entry.id)"
+    Assert-Equal ([string]$sourceMod.version) ([string]$entry.version) "release version matches manifest: $($entry.id)"
+    foreach ($name in @($entry.requiredFiles) + @($entry.optionalFiles)) {
+        Assert-SafeRelativePath ([string]$name) "release file entry for $($entry.id)"
+        Assert-True ([string]$name -notmatch '(?i)(Lunaris|0Harmony|Assembly-CSharp|UnityEngine).*\\.dll$') "game/framework DLL excluded: $($entry.id)/$name"
+        Assert-True ([IO.Path]::GetExtension([string]$name) -ne ".pdb") "PDB excluded: $($entry.id)/$name"
+    }
+}
+
+$projectRoot = Split-Path -Parent $SuiteRoot
+Assert-True (Test-Path (Join-Path $projectRoot "build\ErenshorLocalBuildSupport.psm1")) "root local build support module exists"
+Assert-True (Test-Path (Join-Path $projectRoot "BUILD_TEST_INSTALL_CURRENT_LOCAL_SUITE.ps1")) "root local dirty build wrapper exists"
+Assert-True (Test-Path (Join-Path $SuiteRoot "PACKAGE_RELEASE.ps1")) "release packager exists"
+Assert-True (Test-Path (Join-Path $SuiteRoot "RELEASE_GATE.ps1")) "release gate exists"
 
 Write-Host "PASS Erenshor-Mod-Suite manifest/build-policy tests - $assertions assertions" -ForegroundColor Green

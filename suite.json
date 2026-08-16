@@ -11,15 +11,16 @@
       "repo": "DeepSim-erenshor",
       "localDir": "DeepSim-erenshor",
       "underMods": true,
-      "branch": "agent/lunaris-native-deepsims",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Roleplay central guard / subjective-routing / identity-crossref landed but not yet live-retested.",
+      "notes": "Social routing, bounded context/session memory, party-thread ownership, Wiki/news routing, and quiet diagnostics are integrated. Requires the ordered final live conversation matrix.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_DETERMINISTIC_TESTS.ps1"
-      ]
+      ],
+      "version": "0.7.3"
     },
     {
       "id": "PartyTools",
@@ -27,15 +28,16 @@
       "repo": "Erenshor-PartyTools",
       "localDir": "Erenshor-PartyTools",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorPartyTools.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Lunaris migration only, not yet live-retested this session.",
+      "notes": "Accepted retained-UI/camera-ownership candidate; requires final integrated live UI validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
-      ]
+      ],
+      "version": "0.1.5"
     },
     {
       "id": "Contracts",
@@ -43,15 +45,16 @@
       "repo": "ErenshorContracts",
       "localDir": "ErenshorContracts",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorContracts.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Player-ready gate, per-character data, launcher grip/deferred-toggle fix, and instance diagnostics landed. Needs a fresh live run to read the instance diagnostics and confirm the launcher fix.",
+      "notes": "Exactly-once gold plus personal-XP claim ledger and raid claim deferral are integrated. Must remain non-Green until the full accept/complete/claim/no-duplicate/restart persistence live loop passes.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
-      ]
+      ],
+      "version": "0.4.1"
     },
     {
       "id": "Journal",
@@ -59,15 +62,16 @@
       "repo": "ErenshorJournal",
       "localDir": "ErenshorJournal",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorJournal.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Known-good launcher interaction reference for the rest of the suite. Player-ready gate + per-character notes landed; click-open chain traces correctly but has not been proven live since that fix.",
+      "notes": "Accepted retained-UI chevron and camera-ownership candidate; requires final integrated launcher, drag, collapse, and persistence validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
-      ]
+      ],
+      "version": "0.1.7"
     },
     {
       "id": "GuildLife",
@@ -75,7 +79,7 @@
       "repo": "ErenshorGuildLife",
       "localDir": "ErenshorGuildLife",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorGuildLife.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
@@ -83,7 +87,8 @@
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
-      ]
+      ],
+      "version": "0.1.2"
     },
     {
       "id": "Campmaster",
@@ -91,7 +96,7 @@
       "repo": "Erenshor-Campmaster",
       "localDir": "Erenshor-Campmaster",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorCampmaster.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
@@ -100,7 +105,8 @@
       "testScripts": [
         "tests/RUN_DETERMINISTIC_TESTS.ps1",
         "tests/RUN_CONTROL_API_TESTS.ps1"
-      ]
+      ],
+      "version": "0.4.1"
     },
     {
       "id": "Nemesis",
@@ -108,7 +114,7 @@
       "repo": "Erenshor-Nemesis",
       "localDir": "Erenshor-Nemesis",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorNemesis.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
@@ -117,7 +123,8 @@
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
-      "inGameSelfTest": "/enemesis selftest"
+      "inGameSelfTest": "/enemesis selftest",
+      "version": "0.2.0"
     },
     {
       "id": "CraftingExpanded",
@@ -125,16 +132,17 @@
       "repo": "Erenshor-Crafting-Expanded",
       "localDir": "Erenshor-Crafting-Expanded",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorCraftingExpanded.dll",
       "enabled": true,
-      "status": "BLOCKED",
-      "notes": "Still WIP per prior audit: missing LICENSE/NOTICE/CHANGELOG/SECURITY.md, intentionally excluded from the public-repo publish pass. Builds and installs fine; not yet treated as a finished suite member.",
+      "status": "NEEDS_LIVE_TEST",
+      "notes": "Foraging gather transaction, local-hostile combat eligibility, custom presentation, and retained collapse polish are integrated. Production native recipes remain fail-closed; release designation is Foraging/Crafting Preview pending live proof.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
-      "inGameSelfTest": "/craftdiag"
+      "inGameSelfTest": "/craftdiag",
+      "version": "0.2.3"
     },
     {
       "id": "Duel",
@@ -142,16 +150,17 @@
       "repo": "Erenshor-Duel",
       "localDir": "Erenshor-Duel",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorDuel.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'Erenshor-Duel-migration' path to avoid clobbering older uncommitted work; that older checkout now lives at legacy-worktrees/Erenshor-Duel-old-main-dirty). A real party-Sim locality bug fix (party membership bypassing the nearby-Sim scene gate) has landed on top of the migration and needs live retest.",
+      "notes": "Accepted Practice Duel retained-UI/camera candidate with party-Sim locality correction; requires final integrated live duel validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
-      "inGameSelfTest": "/eduel selftest"
+      "inGameSelfTest": "/eduel selftest",
+      "version": "0.4.1"
     },
     {
       "id": "PvP",
@@ -159,14 +168,17 @@
       "repo": "Erenshor-PvP",
       "localDir": "Erenshor-PvP",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorPvP.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Encounter/combat itself already had a good live result (do not touch). Launcher was rebuilt from a bare GUI.Toggle into a proper grip+button GUI.Window twice (quick-toggle-visibility fix, then drag/click-overlap fix); open-state mutation deferred out of OnGUI. Full PvpPanel drag-into-camera bug (Part 12 of the suite-direction task) is still UNRESOLVED. Natural ambush has not yet been observed live -- do not treat that as a failure, just untested.",
-      "testClass": "in_game_selftest",
-      "testScripts": [],
-      "inGameSelfTest": "/epvp selftest"
+      "notes": "Lifecycle, cleanup, containment, reward claim marker, zoning delay, and retained drag/camera guards are integrated. Requires one complete final-candidate live match and restart proof.",
+      "testClass": "standalone_deterministic_plus_in_game_selftest",
+      "testScripts": [
+        "tests/RUN_UI_TESTS.ps1"
+      ],
+      "inGameSelfTest": "/epvp selftest",
+      "version": "0.5.2"
     },
     {
       "id": "Follow",
@@ -174,16 +186,17 @@
       "repo": "ErenshorFollow",
       "localDir": "ErenshorFollow",
       "underMods": true,
-      "branch": "agent/lunaris-native",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorFollow.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "This is the clean Lunaris migration checkout (formerly kept at a separate 'ErenshorFollow-migration' path; that older checkout now lives at legacy-worktrees/ErenshorFollow-old-main-dirty -- see docs/CURRENT_WORK.md for the reconciliation classification: most of that old work was already superseded by shipped 0.4.1/0.4.2 behavior, two small pieces were identified as still-unique and not yet ported).",
+      "notes": "Post-zone route-readiness probing and accepted expedition repairs are integrated. Requires one continuous multi-hop expedition on the exact final DLL.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "inGameSelfTest": "/efollow diag"
+      "inGameSelfTest": "/efollow diag",
+      "version": "0.6.4"
     },
     {
       "id": "SuiteHub",
@@ -191,25 +204,17 @@
       "repo": "ErenshorSuiteHub",
       "localDir": "ErenshorSuiteHub",
       "underMods": false,
-      "branch": "main",
+      "branch": "checkpoint/suite-ui-20260813-152225",
       "dll": "ErenshorSuiteHub.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Phase 2 core candidate: fully-ready lifecycle gate, single MODS launcher, installed-only navigation, Overview + honest module pages, optional versioned Aura bridge, input capture, and deterministic policy tests. No sibling mod implements the bridge in this snapshot yet; live verification remains required.",
+      "notes": "Accepted retained-uGUI dock chevron, routing, fallback ownership, and pointer/camera containment candidate; requires final integrated live UI validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
-      ]
+      ],
+      "version": "0.5.2"
     }
   ],
-  "excluded": [
-    {
-      "path": "legacy-worktrees/Erenshor-Duel-old-main-dirty",
-      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work (a real, still-unported party-Sim locality fix -- see docs/CURRENT_WORK.md). Not a build target."
-    },
-    {
-      "path": "legacy-worktrees/ErenshorFollow-old-main-dirty",
-      "reason": "Old pre-migration checkout on 'main' with unreconciled uncommitted local work. Not a build target. See docs/CURRENT_WORK.md for the reconciliation classification."
-    }
-  ]
+  "excluded": []
 }
