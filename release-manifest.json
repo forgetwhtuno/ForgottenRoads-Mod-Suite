@@ -161,7 +161,7 @@
                  {
                      "modId":  "Campmaster",
                      "displayName":  "Campmaster",
-                     "version":  "0.4.1",
+                     "version":  "0.4.0",
                      "classification":  "YELLOW RC NEAR READY",
                      "dllFilename":  "ErenshorCampmaster.dll",
                      "sha256":  "c8d80035672c581f9a740c14dc37ff251be8a7039819cd0499a6368bea0a6549",

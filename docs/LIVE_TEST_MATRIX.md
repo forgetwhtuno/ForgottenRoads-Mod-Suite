@@ -1,53 +1,41 @@
-# Live Test Matrix
+# Forgotten Roads for Erenshor — live test matrix
 
-The authoritative checklist for what has actually been confirmed in the running game, as opposed
-to what's only been confirmed at compile/deterministic-test time. Update this whenever a live
-session actually exercises a row for a mod — do not mark anything PASS from static reasoning
-alone.
+This is the ordered checklist for the exact release candidate. A deterministic test, source review, or successful build does not mark a live row as passed.
 
-Legend: `PASS` (live-confirmed working) · `FAIL` (live-confirmed broken, see notes) · `-`
-(not yet tested) · `N/A` (doesn't apply to this mod).
+Legend: `PASS` = confirmed on the exact candidate; `FAIL` = confirmed broken on the exact candidate; `PENDING` = not yet exercised; `N/A` = not applicable.
 
-## Suite-wide rows
+## Ordered session
 
-| Row | DeepSims | PartyTools | Contracts | Journal | GuildLife | Campmaster | Nemesis | Crafting | Duel | PvP | Follow |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| load | - | - | - | - | - | - | - | - | - | - | - |
-| menu visibility (no launcher/panel before character ready) | N/A | - | - | PASS (before this session's changes) | - | N/A | N/A | - | - | - | N/A |
-| central tab (Suite Hub) | - | - | - | - | - | - | - | - | - | - | - |
-| dedicated panel | N/A | - | - | PASS | - | N/A | N/A | - | - | FAIL (see notes) | - |
-| drag | N/A | - | - | PASS | - | N/A | N/A | - | - | FAIL (see notes) | - |
-| camera containment | N/A | - | - | - | - | N/A | N/A | - | - | - | - |
-| target containment | N/A | - | - | - | - | N/A | N/A | - | - | - | - |
-| zone (survives zone transition) | - | - | - | - | - | - | - | - | - | - | - |
-| character swap (per-character data correct) | N/A | N/A | - | - | - | N/A | - | N/A | N/A | N/A | N/A |
-| unload | - | - | - | - | - | - | - | - | - | - | - |
-| reload | - | - | - | - | - | - | - | - | - | - | - |
-| repeat reload | - | - | - | - | - | - | - | - | - | - | - |
-| core feature | PASS (Ollama/group chat) | - | - | - | - | - | - | - | - | PASS (encounter/combat) | - |
+1. Start the game and record loaded versions for all enabled modules.
+2. Verify Hub launch, navigation arrows, UI click containment, and camera containment.
+3. Verify Journal launch, entry persistence, and restart behavior.
+4. Verify Party Tools launch, controls, and camera containment.
+5. Verify one complete Practice Duel lifecycle.
+6. Verify a continuous Follow multi-hop expedition.
+7. Verify Deep Sims direct conversation, party back-and-forth, session reference, Wiki routing, and news routing.
+8. Verify Crafting gather interaction, custom icons, and combat eligibility.
+9. Verify Contracts accept, complete, exactly-once gold/XP claim, raid deferral, and restart persistence.
+10. Verify one complete PvP match, cleanup, reward, zone behavior, and restart behavior.
+11. Verify Campmaster Hunt Camp/Relax party transitions, zoning, and restart behavior.
+12. Verify Nemesis selection, lifecycle, duplicate prevention, zoning, and persistence.
 
-## Notes
+## Current exact-candidate status
 
-- **PvP / drag / dedicated panel = FAIL**: dragging the full `PvpPanel` can jump/stick at
-  top-left and move the world camera. Known, unresolved, tracked in `docs/CURRENT_WORK.md`. The
-  launcher fix (grip/button separation) does not touch this — it's a separate bug in the panel's
-  own drag handling.
-- **PvP / core feature = PASS**: encounter/combat itself had a good live result this session. Do
-  not disturb it while working on anything else PvP-related.
-- **Journal**: rows marked PASS reflect the live state *before* this session's player-ready-gate /
-  per-character-storage / diagnostic changes. Those changes have build/test verification only —
-  re-confirm these rows on the next live pass rather than assuming they still hold.
-- **Duplicate Lunaris plugin instance** is not a row here because it's not mod-specific — see
-  `docs/CURRENT_WORK.md`'s dedicated section. It should be checked before trusting any "drag" or
-  "central tab" result across the whole suite, since two coexisting `GUI.Window` instances with
-  the same ID is a plausible explanation for flaky results in either row.
-- **Natural PvP ambush** has not been observed. This is untested, not a failure — check the
-  configured ambush timing/chance defaults and confirm the player is standing in an allowed
-  ambush zone with PvP/ambush enabled before drawing any conclusion.
-- **2026-08-13 integration pass**: every row in this matrix is still `-` (not yet live-tested) with
-  respect to the newly-reconciled Hub contract (two-arg actions, choice settings, canonical
-  1.0s+CanMove readiness, per-mod Aura providers) even where a prior PASS exists for older
-  behavior — do not carry forward old PASS marks for "central tab (Suite Hub)" or "menu visibility"
-  rows without re-confirming, since the readiness policy and launcher-suppression logic changed
-  under all 11 mods. PvP's and Crafting's panel-drag rewrites are new this pass and unverified live
-  (see `docs/CURRENT_WORK.md`). All 12 plugins are freshly built/installed as of this pass.
+| Module | Exact-candidate live status | Required proof |
+|---|---|---|
+| Deep Sims | PENDING | Direct relevance, party thread, session reference, Wiki/news route, and no party-state contradiction |
+| Party Tools | PENDING | Launch, control flow, drag/camera containment, restart |
+| Contracts | PENDING | Accept → complete → one gold/XP claim → no duplicate → restart; safe raid deferral |
+| Journal | PENDING | Launch, entry persistence, restart |
+| Guild Life | PENDING | Player-ready, UI, bulletin persistence |
+| Campmaster | PENDING | Hunt Camp/Relax behavior, party transition, zone, restart |
+| Nemesis | PENDING | Selection, lifecycle, duplicate prevention, zone, restart |
+| Crafting Expanded | PENDING | Gather, icons, combat eligibility, preview scope |
+| Practice Duel | PENDING | Full match lifecycle and cleanup |
+| PvP | PENDING | Full match, cleanup, reward, zone, restart |
+| Follow | PENDING | One continuous multi-hop expedition |
+| Suite Hub | PENDING | Launch, navigation, click/camera containment, routing |
+
+## Evidence policy
+
+Record a short, player-observable result for each completed row. Keep logs, private paths, machine data, and development-process notes out of public release documentation.
