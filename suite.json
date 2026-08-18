@@ -52,12 +52,12 @@
       "dll": "ErenshorContracts.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.4.4 locality/target-quality candidate: unaccepted Local offers follow current playable zone without zoning rerolls; accepted OriginZone and exactly-once Gold/personal-XP ledger remain preserved. Requires locality/target/claim live loop.",
+      "notes": "0.4.5 mob-only target candidate: generated contracts are limited to ordinary mobs, with named individuals (dialog, quest, achievement, raid, and rare named spawn variants) excluded at discovery. The 0.4.4 locality behaviour is preserved: unaccepted Local offers follow the current playable zone without zoning rerolls, and accepted OriginZone plus the exactly-once Gold/personal-XP ledger are unchanged. Requires locality/target/claim live loop.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.4.4",
+      "version": "0.4.5",
       "pluginId": "ErenshorContracts"
     },
     {

@@ -74,7 +74,7 @@
       "experimental": [
         "Gold plus personal-XP claims and raid deferral require the ordered final live claim/persistence proof"
       ],
-      "version": "0.4.4",
+      "version": "0.4.5",
       "dll": "ErenshorContracts.dll",
       "sourceRoot": "mods/ErenshorContracts",
       "requiredFiles": [

@@ -77,7 +77,7 @@
     {
       "modId": "Contracts",
       "displayName": "Contracts",
-      "version": "0.4.4",
+      "version": "0.4.5",
       "classification": "YELLOW RC NEAR READY",
       "dllFilename": "ErenshorContracts.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -100,7 +100,7 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Reconciled 0.4.4 source requires current-zone Local board, target-quality, and exactly-once Gold/XP live claim proof.",
+        "Reconciled 0.4.5 source requires current-zone Local board, target-quality and mob-only target, and exactly-once Gold/XP live claim proof.",
         "Mandatory live loop is unproven: accept -> complete -> claim gold + XP -> no duplicate -> restart -> persisted state; raid-state claim deferral must also pass."
       ]
     },

@@ -11,7 +11,7 @@ Current release status is conservative: deterministic/build evidence is recorded
 |---|---|---|---|
 | Deep Sims | [DeepSim-ForgottenRoads](https://github.com/forgetwhtuno/DeepSim-ForgottenRoads) | 0.7.6 | Standalone-runtime + single-model candidate; needs current live conversation/reload proof |
 | Party Tools | [ForgottenRoads-PartyTools](https://github.com/forgetwhtuno/ForgottenRoads-PartyTools) | 0.1.6 | Needs integrated live UI validation |
-| Contracts | [ForgottenRoadsContracts](https://github.com/forgetwhtuno/ForgottenRoadsContracts) | 0.4.4 | Needs locality, target, and claim live loop |
+| Contracts | [ForgottenRoadsContracts](https://github.com/forgetwhtuno/ForgottenRoadsContracts) | 0.4.5 | Needs locality, target, and claim live loop |
 | Journal | [ForgottenRoadsJournal](https://github.com/forgetwhtuno/ForgottenRoadsJournal) | 0.1.8 | Needs integrated live UI and persistence validation |
 | Guild Life | [ForgottenRoadsGuildLife](https://github.com/forgetwhtuno/ForgottenRoadsGuildLife) | 0.1.3 | Needs live retest |
 | Campmaster | [ForgottenRoads-Campmaster](https://github.com/forgetwhtuno/ForgottenRoads-Campmaster) | 0.4.0 | Needs focused live workflow validation |

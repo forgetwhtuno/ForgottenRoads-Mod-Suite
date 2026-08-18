@@ -27,7 +27,7 @@ These are separate gates and must never be reported as one status:
 |---|---:|---|---|
 | Deep Sims | 0.7.6 | Source/static evidence; current build/live pending | Single-model grounded social pipeline plus fail-closed runtime hooks and standalone Follow ownership |
 | Party Tools | 0.1.6 | Source and deterministic tests | Hub/UI, drag, camera, and restart validation |
-| Contracts | 0.4.4 | Source and deterministic tests | Locality, target quality, accept/complete, exactly-once claim, restart persistence, and raid-claim safety |
+| Contracts | 0.4.5 | Source and deterministic tests | Mob-only generated targets, locality, target quality, accept/complete, exactly-once claim, restart persistence, and raid-claim safety |
 | Journal | 0.1.8 | Source only; prior build/install evidence retired because source changed | Journal UI and persistence validation |
 | Guild Life | 0.1.3 | Source only; prior build/install evidence retired because source changed | Focused live UI, gesture ownership, camera containment, and player-ready validation |
 | Campmaster | 0.4.0 | Source/test evidence | Focused camp/relax workflow, party transitions, zoning, and restart validation |
