@@ -23,12 +23,13 @@
       "entryPoints": [
         "Group/social interaction is automatic when enabled",
         "/dstalk <SimName>",
-        "/dsroleplay on|off|status"
+        "/dsroleplay on|off|status",
+        "/dsbanter"
       ],
       "experimental": [
         "LLM/Ollama-backed expression is optional and provider-dependent"
       ],
-      "version": "0.7.3",
+      "version": "0.7.6",
       "dll": "ErenshorDeepSims.dll",
       "sourceRoot": "mods/DeepSim-erenshor",
       "requiredFiles": [
@@ -52,7 +53,7 @@
         "/ptwho"
       ],
       "experimental": [],
-      "version": "0.1.5",
+      "version": "0.1.6",
       "dll": "ErenshorPartyTools.dll",
       "sourceRoot": "mods/Erenshor-PartyTools",
       "requiredFiles": [
@@ -73,7 +74,7 @@
       "experimental": [
         "Gold plus personal-XP claims and raid deferral require the ordered final live claim/persistence proof"
       ],
-      "version": "0.4.1",
+      "version": "0.4.5",
       "dll": "ErenshorContracts.dll",
       "sourceRoot": "mods/ErenshorContracts",
       "requiredFiles": [
@@ -92,7 +93,7 @@
         "Journal launcher or Suite Hub Journal shortcut"
       ],
       "experimental": [],
-      "version": "0.1.7",
+      "version": "0.1.8",
       "dll": "ErenshorJournal.dll",
       "sourceRoot": "mods/ErenshorJournal",
       "requiredFiles": [
@@ -111,7 +112,7 @@
         "Guild Life launcher or Suite Hub Guild Life shortcut"
       ],
       "experimental": [],
-      "version": "0.1.2",
+      "version": "0.1.3",
       "dll": "ErenshorGuildLife.dll",
       "sourceRoot": "mods/ErenshorGuildLife",
       "requiredFiles": [
@@ -148,12 +149,16 @@
     {
       "id": "Nemesis",
       "entryPoints": [
+        "Automatic rival assignment on character readiness",
+        "/enemesis status",
         "/enemesis candidates",
         "/enemesis select <Sim>",
-        "/enemesis status"
+        "/enemesis reply <text>",
+        "/enemesis reroll",
+        "/enemesis selftest"
       ],
       "experimental": [],
-      "version": "0.2.0",
+      "version": "0.3.0",
       "dll": "ErenshorNemesis.dll",
       "sourceRoot": "mods/Erenshor-Nemesis",
       "requiredFiles": [
@@ -175,7 +180,7 @@
       "experimental": [
         "Native recipe experiment is gated/off unless explicitly enabled in the mod"
       ],
-      "version": "0.2.3",
+      "version": "0.2.4",
       "dll": "ErenshorCraftingExpanded.dll",
       "sourceRoot": "mods/Erenshor-Crafting-Expanded",
       "requiredFiles": [
@@ -195,11 +200,12 @@
         "/eduel <Sim A> vs <Sim B>",
         "/eduel nearby",
         "/eduel status",
+        "/eduel diag",
         "/eduel selftest",
         "/eduel stop"
       ],
       "experimental": [],
-      "version": "0.4.1",
+      "version": "0.4.6",
       "dll": "ErenshorDuel.dll",
       "sourceRoot": "mods/Erenshor-Duel",
       "requiredFiles": [
@@ -222,7 +228,7 @@
       "experimental": [
         "Natural ambush behavior remains a live-test gate"
       ],
-      "version": "0.5.2",
+      "version": "0.5.10",
       "dll": "ErenshorPvP.dll",
       "sourceRoot": "mods/Erenshor-PvP",
       "requiredFiles": [
@@ -261,14 +267,14 @@
     {
       "id": "SuiteHub",
       "entryPoints": [
-        "\u25c6 MODS dock",
+        "◆ MODS dock",
         "Mod Suite row opens the full Suite window",
         "/mods and /suitehub are recovery/developer commands"
       ],
       "experimental": [
         "Native Escape quick-close consumption remains capability-gated until a verified game target exists"
       ],
-      "version": "0.5.2",
+      "version": "0.5.3",
       "dll": "ErenshorSuiteHub.dll",
       "sourceRoot": "ErenshorSuiteHub",
       "requiredFiles": [

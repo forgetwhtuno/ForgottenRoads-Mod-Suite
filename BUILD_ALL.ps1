@@ -19,6 +19,7 @@ param(
 $ErrorActionPreference = "Stop"
 $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $SuiteRoot "SuiteBuild.Common.ps1")
+. (Join-Path $SuiteRoot "Release.Common.ps1")
 $SuiteJson = Join-Path $SuiteRoot "suite.json"
 $Manifest = Get-Content $SuiteJson -Raw | ConvertFrom-Json
 $WorkspaceRoot = (Resolve-Path (Join-Path $SuiteRoot $Manifest.workspaceRoot)).Path
@@ -199,12 +200,20 @@ if ($Install) {
             Id=$m.id; DisplayName=$m.displayName; Source=$source; Destination=(Join-Path $RealPlugins $m.dll); ExpectedSha256=$entry.sha256
         }
     }
-    Install-SuiteSetTransactional $installItems
+    $preIdentityAudit = Get-LunarisSuiteIdentityAudit -PluginsDir $RealPlugins -Manifest $Manifest -LunarisDll $lunarisDll -AllowMissing
+    Assert-LunarisSuiteIdentityPreInstall -Audit $preIdentityAudit -InstallItems $installItems
+    $requiredInstallIds = @($installItems | ForEach-Object { $_.Id })
+    $postValidation = {
+        $post = Get-LunarisSuiteIdentityAudit -PluginsDir $RealPlugins -Manifest $Manifest -LunarisDll $lunarisDll -AllowMissing
+        Assert-LunarisSuiteIdentityForInstall -Audit $post -RequiredIds $requiredInstallIds -AllowMissingOthers
+    }
+    Install-SuiteSetTransactional $installItems -PostInstallValidation $postValidation
     foreach ($item in $installItems) {
         $row = $results | Where-Object { $_.Mod -eq $item.DisplayName } | Select-Object -First 1
         $row.Installed = "yes"
-        Write-Host "[$($item.DisplayName)] installed -> $($item.Destination)" -ForegroundColor Green
+        Write-Host "[$($item.DisplayName)] installed -> <Erenshor>\plugins\$([IO.Path]::GetFileName($item.Destination))" -ForegroundColor Green
     }
+    Write-Host "Lunaris identity audit: PASS after transactional install." -ForegroundColor Green
 }
 
 Write-Host "`n==== Suite build summary ====" -ForegroundColor Cyan

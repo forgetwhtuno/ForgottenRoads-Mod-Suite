@@ -4,6 +4,8 @@ This is the ordered checklist for the exact release candidate. A deterministic t
 
 Legend: `PASS` = confirmed on the exact candidate; `FAIL` = confirmed broken on the exact candidate; `PENDING` = not yet exercised; `N/A` = not applicable.
 
+A live row can only be marked `PASS` against an artifact that was built from the current source and whose installed hash was verified. If source changes after a row passes, that row returns to `PENDING`.
+
 ## Ordered session
 
 1. Start the game and record loaded versions for all enabled modules.
@@ -26,13 +28,13 @@ Legend: `PASS` = confirmed on the exact candidate; `FAIL` = confirmed broken on 
 | Deep Sims | PENDING | Direct relevance, party thread, session reference, Wiki/news route, and no party-state contradiction |
 | Party Tools | PENDING | Launch, control flow, drag/camera containment, restart |
 | Contracts | PENDING | Accept → complete → one gold/XP claim → no duplicate → restart; safe raid deferral |
-| Journal | PENDING | Launch, entry persistence, restart |
-| Guild Life | PENDING | Player-ready, UI, bulletin persistence |
+| Journal | PENDING | Rebuild and reinstall first (recorded artifact predates current source), then launch, entry persistence, restart |
+| Guild Life | PENDING | Rebuild and reinstall first (recorded artifact predates current source), then player-ready, UI, gesture ownership, camera containment, bulletin persistence |
 | Campmaster | PENDING | Hunt Camp/Relax behavior, party transition, zone, restart |
 | Nemesis | PENDING | Selection, lifecycle, duplicate prevention, zone, restart |
 | Crafting Expanded | PENDING | Gather, icons, combat eligibility, preview scope |
-| Practice Duel | PENDING | Full match lifecycle and cleanup |
-| PvP | PENDING | Full match, cleanup, reward, zone, restart |
+| Practice Duel | PENDING | Duel starts; both sides deal virtual damage; with the opponent still targeted a legitimate SelfOnly/ApplyToCaster/InflictOnSelf heal applies to the caster and does not heal the opponent, with normal resource/cooldown behavior; duel continues; a second duel runs without restart; AoE and cleanup containment hold |
+| PvP | PENDING | Exact current DLL with one canonical plugin identity; arranged 5v5 showing 3/2/1/GO, no pre-GO damage, attackers move and engage, damage lands in both directions, native combat/spell behavior occurs; one failed proxy does not destroy a viable match; reward only on a legitimate outcome; second consecutive 5v5 without restart; restart then smoke match |
 | Follow | PENDING | One continuous multi-hop expedition |
 | Suite Hub | PENDING | Launch, navigation, click/camera containment, routing |
 

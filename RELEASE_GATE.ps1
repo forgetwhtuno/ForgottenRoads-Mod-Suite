@@ -22,9 +22,9 @@ Write-Host "====================================================================
 
 # Filesystem audit is evidence-only by default. It never deletes or moves anything in release mode.
 $global:LASTEXITCODE = 0
-& (Join-Path $SuiteRoot "AUDIT_ACTIVE_PLUGINS.ps1") -GameDir $GameDir
+& (Join-Path $SuiteRoot "AUDIT_ACTIVE_PLUGINS.ps1") -GameDir $GameDir -LunarisLibDir $LunarisLibDir
 if ($LASTEXITCODE -eq 2) {
-    throw "Active plugins contain duplicate/missing/suspicious suite DLLs. Resolve or quarantine them before a final release gate."
+    throw "Active plugins contain duplicate/missing/ambiguous discoverable suite plugin identities. Resolve or quarantine them before a final release gate."
 }
 if ($LASTEXITCODE -and $LASTEXITCODE -ne 0) { throw "Active plugin audit failed with exit code $LASTEXITCODE." }
 

@@ -11,6 +11,7 @@ param(
 $ErrorActionPreference = "Stop"
 $SuiteRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 . (Join-Path $SuiteRoot "SuiteBuild.Common.ps1")
+. (Join-Path $SuiteRoot "Release.Common.ps1")
 $SuiteJson = Join-Path $SuiteRoot "suite.json"
 $Manifest = Get-Content $SuiteJson -Raw | ConvertFrom-Json
 
@@ -76,7 +77,19 @@ foreach ($entry in $entries) {
     }
 }
 
-Install-SuiteSetTransactional $installItems
+$lunarisIdentityDll = Resolve-LunarisIdentityAssemblyPath -GameDir $RealGameDir
+$preIdentityAudit = Get-LunarisSuiteIdentityAudit -PluginsDir $RealPlugins -Manifest $Manifest -LunarisDll $lunarisIdentityDll -AllowMissing
+Assert-LunarisSuiteIdentityPreInstall -Audit $preIdentityAudit -InstallItems $installItems
+
+$requiredInstallIds = @($installItems | ForEach-Object { $_.Id })
+$postValidation = {
+    $post = Get-LunarisSuiteIdentityAudit -PluginsDir $RealPlugins -Manifest $Manifest -LunarisDll $lunarisIdentityDll -AllowMissing
+    Assert-LunarisSuiteIdentityForInstall -Audit $post -RequiredIds $requiredInstallIds -AllowMissingOthers
+}
+Install-SuiteSetTransactional $installItems -PostInstallValidation $postValidation
+
+$postIdentityAudit = Get-LunarisSuiteIdentityAudit -PluginsDir $RealPlugins -Manifest $Manifest -LunarisDll $lunarisIdentityDll -AllowMissing
+Assert-LunarisSuiteIdentityForInstall -Audit $postIdentityAudit -RequiredIds $requiredInstallIds -AllowMissingOthers
 
 $results = @()
 foreach ($item in $installItems) {
@@ -92,3 +105,4 @@ foreach ($item in $installItems) {
 
 Write-Host "`n==== Install summary ====" -ForegroundColor Cyan
 $results | Format-Table -AutoSize
+Write-Host "Lunaris identity audit: PASS - one discoverable identity for every installed module selected in this transaction." -ForegroundColor Green

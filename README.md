@@ -9,18 +9,18 @@ Current release status is conservative: deterministic/build evidence is recorded
 
 | Mod | Canonical repository | Current source version | Current status |
 |---|---|---|---|
-| Deep Sims | [DeepSim-ForgottenRoads](https://github.com/forgetwhtuno/DeepSim-ForgottenRoads) | 0.7.3 | Needs ordered live conversation matrix |
-| Party Tools | [ForgottenRoads-PartyTools](https://github.com/forgetwhtuno/ForgottenRoads-PartyTools) | 0.1.5 | Needs integrated live UI validation |
-| Contracts | [ForgottenRoadsContracts](https://github.com/forgetwhtuno/ForgottenRoadsContracts) | 0.4.1 | Needs accept-to-restart reward/persistence live loop |
-| Journal | [ForgottenRoadsJournal](https://github.com/forgetwhtuno/ForgottenRoadsJournal) | 0.1.7 | Needs integrated live UI and persistence validation |
-| Guild Life | [ForgottenRoadsGuildLife](https://github.com/forgetwhtuno/ForgottenRoadsGuildLife) | 0.1.2 | Needs live retest |
+| Deep Sims | [DeepSim-ForgottenRoads](https://github.com/forgetwhtuno/DeepSim-ForgottenRoads) | 0.7.6 | Standalone-runtime + single-model candidate; needs current live conversation/reload proof |
+| Party Tools | [ForgottenRoads-PartyTools](https://github.com/forgetwhtuno/ForgottenRoads-PartyTools) | 0.1.6 | Needs integrated live UI validation |
+| Contracts | [ForgottenRoadsContracts](https://github.com/forgetwhtuno/ForgottenRoadsContracts) | 0.4.5 | Needs locality, target, and claim live loop |
+| Journal | [ForgottenRoadsJournal](https://github.com/forgetwhtuno/ForgottenRoadsJournal) | 0.1.8 | Needs integrated live UI and persistence validation |
+| Guild Life | [ForgottenRoadsGuildLife](https://github.com/forgetwhtuno/ForgottenRoadsGuildLife) | 0.1.3 | Needs live retest |
 | Campmaster | [ForgottenRoads-Campmaster](https://github.com/forgetwhtuno/ForgottenRoads-Campmaster) | 0.4.0 | Needs focused live workflow validation |
-| Nemesis | [ForgottenRoads-Nemesis](https://github.com/forgetwhtuno/ForgottenRoads-Nemesis) | 0.2.0 | Needs focused lifecycle and persistence validation |
-| Crafting Expanded | [ForgottenRoads-Crafting-Expanded](https://github.com/forgetwhtuno/ForgottenRoads-Crafting-Expanded) | 0.2.3 | Preview; live production-recipe evidence remains required |
-| Practice Duel | [ForgottenRoads-Duel](https://github.com/forgetwhtuno/ForgottenRoads-Duel) | 0.4.1 | Needs integrated live duel validation |
-| PvP | [ForgottenRoads-PvP](https://github.com/forgetwhtuno/ForgottenRoads-PvP) | 0.5.2 | Needs complete exact-candidate live match and restart proof |
+| Nemesis | [ForgottenRoads-Nemesis](https://github.com/forgetwhtuno/ForgottenRoads-Nemesis) | 0.3.0 | Automatic rival/two-way chat candidate; needs current live assignment/chat/persistence proof |
+| Crafting Expanded | [ForgottenRoads-Crafting-Expanded](https://github.com/forgetwhtuno/ForgottenRoads-Crafting-Expanded) | 0.2.4 | Preview; live production-recipe evidence remains required |
+| Practice Duel | [ForgottenRoads-Duel](https://github.com/forgetwhtuno/ForgottenRoads-Duel) | 0.4.6 | Combat-semantics candidate; needs current lifecycle, targeted self-heal, AoE, repeat-duel, and cleanup live proof |
+| PvP | [ForgottenRoads-PvP](https://github.com/forgetwhtuno/ForgottenRoads-PvP) | 0.5.10 | Native lifecycle/fault-isolation candidate; live unproven, needs two consecutive 5v5 plus restart proof |
 | Follow | [ForgottenRoadsFollow](https://github.com/forgetwhtuno/ForgottenRoadsFollow) | 0.6.4 | Needs continuous multi-hop expedition proof |
-| Suite Hub | [ForgottenRoadsSuiteHub](https://github.com/forgetwhtuno/ForgottenRoadsSuiteHub) | 0.5.2 | Needs integrated live Hub/UI validation |
+| Suite Hub | [ForgottenRoadsSuiteHub](https://github.com/forgetwhtuno/ForgottenRoadsSuiteHub) | 0.5.3 | Needs integrated live Hub/UI validation |
 
 Current release truth: [docs/SUITE_STATUS.md](docs/SUITE_STATUS.md), [docs/LIVE_TEST_MATRIX.md](docs/LIVE_TEST_MATRIX.md), [BUILD_REPORT.md](BUILD_REPORT.md), and `release-manifest.json`. `docs/CURRENT_WORK.md` is historical development context and may contain superseded status language.
 
@@ -101,21 +101,40 @@ Erenshor-Mod-Suite/
 
 `mods/` and `ErenshorSuiteHub/` are siblings of this repo (see "One-time setup" above), not
 inside it — this repo has no `mods/` directory of its own.
-```
 
 ## Development workflow
 
 ```
-central suite repo
-    -> one build/install command
-    -> live game testing
-    -> record evidence in docs/CURRENT_WORK.md and docs/LIVE_TEST_MATRIX.md
-    -> deep architectural review when needed
-    -> small targeted local fixes
-    -> draft PR updates in the individual mod repo
-    -> live validation
-    -> merge only after a real pass
+feature branch in the individual mod repo
+    -> source review + deterministic tests
+    -> PR
+    -> merge reviewed candidate source to canonical main
+    -> build/install the exact canonical main set (BUILD_AND_INSTALL_ALL.bat)
+    -> run the ordered live matrix in docs/LIVE_TEST_MATRIX.md
+    -> record evidence, then release only after live certification
 ```
+
+### Merged to main is not release certified
+
+These are two separate gates, and the tooling enforces the second one, not the first:
+
+- **Merge gate.** Reviewed candidate source may be merged to canonical `main` on source review and
+  deterministic tests alone. Merging makes `main` the authoritative candidate; it claims nothing
+  about live behavior.
+- **Release gate.** `RELEASE_GATE.ps1` performs *no* Git writes and does not care whether anything
+  was merged. It re-checks collection consistency, audits active plugin identities, rebuilds every
+  module clean, re-runs each deterministic suite, and then packages against
+  `release-whitelist.json`. `PACKAGE_RELEASE.ps1` refuses a FINAL package for any module that still
+  has declared live blockers.
+
+So a merge never certifies a release. After merging, the exact `main` candidate must be rebuilt and
+installed, and the ordered live matrix run against *that* build — historical live results from an
+earlier DLL do not carry forward.
+
+`-AllowReleaseCandidateWithLiveBlockers` exists for interim testing only. It sets `packageMode` to
+`RELEASE_CANDIDATE` and names the artifact `<module>-<version>-RC.zip`, and the gate prints that
+artifacts are release candidates because live blockers were explicitly allowed. It is not a final
+release certification and does not clear any live blocker.
 
 Do not overstate testing. A build/test-verified fix is not the same as a live-verified fix — see
 `docs/LIVE_TEST_MATRIX.md` for what has actually been confirmed in the running game versus what's
@@ -159,3 +178,8 @@ Release tooling and policies:
 - `release-manifest.json`
 - `AUDIT_ACTIVE_PLUGINS.ps1`
 - `PACKAGE_RELEASE.ps1`
+
+
+## Lunaris plugin identity preflight
+
+Release/install correctness is based on one discoverable Lunaris plugin identity across the recursive `<Erenshor>\plugins` scan tree, not one filename in one folder. See [docs/LUNARIS_PLUGIN_IDENTITY_AUDIT.md](docs/LUNARIS_PLUGIN_IDENTITY_AUDIT.md). `AUDIT_ACTIVE_PLUGINS.ps1` is evidence-only unless the narrow `-QuarantineConfirmedBackups` switch is explicitly requested.
