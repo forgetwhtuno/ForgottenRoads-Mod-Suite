@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "generatedFrom": "FINAL_RC_BUILD_RECEIPT.json",
-  "candidateId": "forgotten-roads-current-pr-heads-pending-rebuild",
+  "generatedFrom": "canonical module main branches",
+  "candidateId": "forgotten-roads-current-main-pending-rebuild",
   "publicIdentity": {
     "author": "forgetwhtuno",
     "email": "314876526+forgetwhtuno@users.noreply.github.com"
