@@ -12,16 +12,16 @@ This document describes the current public release posture. Individual module re
 
 | Module | Version | Current evidence | Live requirement |
 |---|---:|---|---|
-| Deep Sims | 0.7.4 | Source and deterministic tests | Relevant direct conversation, party thread, session-memory, Wiki/news routing, and party-state checks |
+| Deep Sims | 0.7.6 | Source/static evidence; current build/live pending | Single-model grounded social pipeline plus fail-closed runtime hooks and standalone Follow ownership |
 | Party Tools | 0.1.6 | Source and deterministic tests | Hub/UI, drag, camera, and restart validation |
 | Contracts | 0.4.4 | Source and deterministic tests | Locality, target quality, accept/complete, exactly-once claim, restart persistence, and raid-claim safety |
 | Journal | 0.1.8 | Source and deterministic tests | Journal UI and persistence validation |
 | Guild Life | 0.1.3 | Source and deterministic tests | Focused live UI and player-ready validation |
 | Campmaster | 0.4.0 | Source/test evidence | Focused camp/relax workflow, party transitions, zoning, and restart validation |
-| Nemesis | 0.2.0 | Source/test evidence | Rival selection, lifecycle, duplicate prevention, zoning, and persistence validation |
+| Nemesis | 0.3.0 | Source/static evidence; current build/live pending | Automatic persistent rival, two-way chat, optional Deep Sims voice, native chat presentation |
 | Crafting Expanded | 0.2.4 | Source and deterministic tests | Foraging/crafting preview matrix; native production recipe proof remains blocked |
-| Practice Duel | 0.4.1 | Source, deterministic tests, and candidate build evidence | Complete local-party duel lifecycle validation |
-| PvP | 0.5.4 | Source, deterministic tests, and candidate build evidence | Complete match, cleanup, reward, zoning, and restart validation |
+| Practice Duel | 0.4.3 | Source/static evidence; current build/live pending | Native-calculated virtual damage, self-cast repair, actor-aware AoE containment |
+| PvP | 0.5.7 | Source/static evidence; current build/live pending | Native proxy AI startup/coroutines, countdown/GO containment, inactive-AI reward safety |
 | Follow | 0.6.4 | Source, deterministic tests, and candidate build evidence | One continuous multi-hop expedition on the exact candidate DLL |
 | Suite Hub | 0.5.3 | Source, deterministic tests, and candidate build evidence | Hub launch, dock/UI arrows, camera containment, and module routing validation |
 

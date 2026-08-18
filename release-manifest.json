@@ -11,13 +11,14 @@
   "buildSet": "REQUIRES_REBUILD_OWNED_MODULES",
   "installedSet": "REQUIRES_REINSTALL_AND_HASH_VERIFY",
   "activePluginAudit": "REQUIRES_LUNARIS_IDENTITY_AUDIT",
-  "liveCertification": "PENDING_PVP_5V5_X2_AND_HUB_ZONE_MATRIX",
+  "liveCertification": "PENDING_ORDERED_LIVE_MATRIX",
+  "liveCertificationNote": "All 12 modules are PENDING in docs/LIVE_TEST_MATRIX.md; every module's liveTestStatus.exactCandidate below is NOT_RUN. The aggregate must not name a residual subset of rows.",
   "mods": [
     {
       "modId": "DeepSims",
       "displayName": "Deep Sims",
-      "version": "0.7.4",
-      "classification": "YELLOW RC NEAR READY",
+      "version": "0.7.6",
+      "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorDeepSims.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
       "installedSha256": "PENDING_RECONCILED_INSTALL",
@@ -39,8 +40,8 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Reconciled 0.7.4 source requires deterministic build plus live opinion/banter/rejection/preemption matrix.",
-        "Exact-candidate live conversation must prove direct relevance, party back-and-forth, Wiki/news routing, session reference, and no party-state contradiction."
+        "Build/install the exact reconciled 0.7.6 candidate on the current game machine.",
+        "Live-prove runtime-hook readiness/fail-closed behavior, 4B-only conversation routing, and standalone Follow ownership after restart/zone transitions."
       ]
     },
     {
@@ -195,8 +196,8 @@
     {
       "modId": "Nemesis",
       "displayName": "Nemesis",
-      "version": "0.2.0",
-      "classification": "YELLOW RC NEAR READY",
+      "version": "0.3.0",
+      "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorNemesis.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
       "installedSha256": "PENDING_RECONCILED_INSTALL",
@@ -218,8 +219,8 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Reconciled native Friend/Guild candidate policy requires live native-roster validation.",
-        "Exact-candidate startup, rival selection/state, zoning, and restart persistence are not yet live-proven."
+        "Build/install the exact 0.3.0 candidate on the current game machine.",
+        "Live-prove zero-command auto assignment, native-colored taunt presentation, two-way Deep Sims reply routing, character isolation, and restart/zone persistence."
       ]
     },
     {
@@ -255,8 +256,8 @@
     {
       "modId": "Duel",
       "displayName": "Practice Duel",
-      "version": "0.4.1",
-      "classification": "YELLOW RC NEAR READY",
+      "version": "0.4.3",
+      "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorDuel.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
       "installedSha256": "PENDING_RECONCILED_INSTALL",
@@ -278,15 +279,15 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Packet documentation/discoverability candidate changed; regenerate exact-candidate release metadata after shared fallback reconciliation.",
-        "Exact-candidate UI/camera containment and a complete duel lifecycle are not yet live-proven."
+        "Build/install the exact 0.4.3 candidate against current Assembly-CSharp.dll.",
+        "Live-prove bidirectional virtual damage first, then targeted self-heal, clean/hostile/bystander AoE semantics, cleanup, and two consecutive duels."
       ]
     },
     {
       "modId": "PvP",
       "displayName": "PvP",
-      "version": "0.5.4",
-      "classification": "YELLOW RC NEAR READY",
+      "version": "0.5.7",
+      "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorPvP.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
       "installedSha256": "PENDING_RECONCILED_INSTALL",
@@ -308,9 +309,9 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Reconciled packet changed this exact release candidate; regenerate deterministic/build/install/live evidence before certification.",
-        "Run current Lunaris recursive plugin-identity audit and prove exactly one ErenshorPvP identity.",
-        "Run two consecutive live 5v5 matches: native maintenance clean, terminal cleanup clean, XP/gold correct, second match fresh."
+        "Build/install the exact 0.5.7 candidate and prove exactly one ErenshorPvP plugin identity.",
+        "Run two consecutive arranged 5v5 matches with 3/2/1/GO, no pre-GO damage, native behavior+nav coroutine readiness, enemy engagement, valid reward, and clean second-match reset.",
+        "Restart and repeat a smoke match before release certification."
       ]
     },
     {

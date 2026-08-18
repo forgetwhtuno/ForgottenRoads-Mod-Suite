@@ -16,12 +16,12 @@
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.7.4 social-routing candidate: explicit opinion questions bypass factual retrieval, direct rejection fallback remains grounded, /dsbanter is a bounded connected A+B thread, and autonomous seed admission learns temporarily from verifier rejection. Requires full live A-F conversation matrix.",
+      "notes": "0.7.6 single-model/social-grounding source with standalone-runtime fail-closed Harmony readiness; embedded /dsfollow movement removed so standalone Erenshor Follow owns movement compatibility. Requires current deterministic build plus live conversation/reload validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_DETERMINISTIC_TESTS.ps1"
       ],
-      "version": "0.7.4",
+      "version": "0.7.6",
       "pluginId": "ErenshorDeepSims"
     },
     {
@@ -125,13 +125,13 @@
       "dll": "ErenshorNemesis.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Native social candidate selection is split into safe base, automatic non-Friend priority with Guild fallback, and deliberate explicit Friend selection. Requires current native Friends/Guild live validation.",
+      "notes": "0.3.0 automatic rival assignment, persistent stable identity, two-way rivalry chat, optional Deep Sims bridge, and native chat presentation. Requires current build/install plus live auto-assignment/chat/persistence validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/enemesis selftest",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "pluginId": "ErenshorNemesis"
     },
     {
@@ -163,13 +163,13 @@
       "dll": "ErenshorDuel.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "Accepted Practice Duel retained-UI/camera candidate with party-Sim locality correction; requires final integrated live duel validation.",
+      "notes": "0.4.3 combat-semantics repair restores native damage-to-virtual-HP transaction, generalized self-cast admission, and actor-aware AoE containment. Requires current build/install plus ordered melee/self-heal/AoE/cleanup live validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/eduel selftest",
-      "version": "0.4.1",
+      "version": "0.4.3",
       "pluginId": "ErenshorDuel"
     },
     {
@@ -182,13 +182,13 @@
       "dll": "ErenshorPvP.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.5.4 duplicate-plugin identity/preflight and temporary-NPC maintenance diagnostics integrated with canonical collapse chrome. Requires current plugin-tree identity proof and two complete 5v5 live matches.",
+      "notes": "0.5.7 native-AI match-start repair retains nameplate runtime state, independently repairs native behavior/nav coroutines, adds arranged countdown/GO containment, healing support, and fail-closed inactive-AI reward safety. Requires current build/install plus two consecutive live 5v5 matches.",
       "testClass": "standalone_deterministic_plus_in_game_selftest",
       "testScripts": [
         "tests/RUN_UI_TESTS.ps1"
       ],
       "inGameSelfTest": "/epvp selftest",
-      "version": "0.5.4",
+      "version": "0.5.7",
       "pluginId": "ErenshorPvP"
     },
     {

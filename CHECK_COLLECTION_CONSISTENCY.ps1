@@ -13,6 +13,26 @@ function Require($condition, $message) {
     if (-not $condition) { $script:failures.Add($message) }
 }
 
+# Reads the version a module actually ships, from source rather than from prose. Both current
+# declaration styles are accepted: a `const string PluginVersion/Version = "x.y.z"` referenced by
+# the attribute, and a version supplied inline as the second [LunarisPlugin(...)] argument.
+# Deliberately NOT parsed here: README/CHANGELOG prose. Matching cosmetic heading text is brittle
+# and would fail on wording changes that are not real drift.
+function Get-SourceVersion([string]$SourceDir) {
+    if (-not (Test-Path $SourceDir)) { return $null }
+    $inline = $null
+    foreach ($file in (Get-ChildItem $SourceDir -Filter "*.cs" -Recurse)) {
+        $text = Get-Content $file.FullName -Raw
+        $const = [regex]::Match($text, 'const\s+string\s+(?:PluginVersion|Version)\s*=\s*"(\d+\.\d+\.\d+)"')
+        if ($const.Success) { return $const.Groups[1].Value }
+        if (-not $inline) {
+            $attr = [regex]::Match($text, '\[LunarisPlugin\(\s*"[^"]+"\s*,\s*"(\d+\.\d+\.\d+)"')
+            if ($attr.Success) { $inline = $attr.Groups[1].Value }
+        }
+    }
+    return $inline
+}
+
 Require ($manifest.displayName -eq "Forgotten Roads for Erenshor") "suite.json collection branding is incorrect"
 Require ((Get-Content (Join-Path $root "README.md") -Raw).Contains("Forgotten Roads for Erenshor")) "central README is not branded"
 
@@ -34,6 +54,17 @@ foreach ($mod in $manifest.mods) {
     $releaseEntry = @($release.mods | Where-Object { $_.modId -eq $mod.id })
     Require ($white.Count -eq 1 -and $white[0].version -eq $mod.version) "$($mod.id) whitelist version differs from suite.json"
     Require ($releaseEntry.Count -eq 1 -and $releaseEntry[0].version -eq $mod.version) "$($mod.id) release-manifest version differs from suite.json"
+
+    # Source is the technical truth. This catches the drift class where a module ships one version
+    # while the manifests still advertise another.
+    $sourceVersion = Get-SourceVersion (Join-Path $localRoot "src")
+    Require ($null -ne $sourceVersion) "$($mod.id) has no discoverable declared plugin version in src"
+    if ($sourceVersion) {
+        Require ($sourceVersion -eq $mod.version) "$($mod.id) source version $sourceVersion differs from suite.json $($mod.version)"
+    }
+
+    # Shipped identity parity: the DLL filename must agree across suite.json and the release manifest.
+    Require ($releaseEntry.Count -eq 1 -and $releaseEntry[0].dllFilename -eq $mod.dll) "$($mod.id) release-manifest dllFilename differs from suite.json dll"
     if (-not $SkipRemote) {
         & git ls-remote --exit-code --heads "https://github.com/$($manifest.owner)/$($mod.repo).git" $mod.branch *> $null
         Require ($LASTEXITCODE -eq 0) "$($mod.id) canonical remote or branch is unreachable"
