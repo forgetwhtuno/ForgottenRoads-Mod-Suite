@@ -8,16 +8,20 @@ A live row can only be marked `PASS` against an artifact that was built from the
 
 ## Ordered session
 
-1. Start the game and record loaded versions for all enabled modules.
+Practice Duel and PvP run early and deliberately. Both had confirmed live failures immediately
+before their current repairs merged, so they are the likeliest rows to fail and the most expensive
+to discover late in a long session.
+
+1. Start the game and record loaded versions and plugin identities for all enabled modules.
 2. Verify Hub launch, navigation arrows, UI click containment, and camera containment.
-3. Verify Journal launch, entry persistence, and restart behavior.
-4. Verify Party Tools launch, controls, and camera containment.
-5. Verify one complete Practice Duel lifecycle.
-6. Verify a continuous Follow multi-hop expedition.
-7. Verify Deep Sims direct conversation, party back-and-forth, session reference, Wiki routing, and news routing.
-8. Verify Crafting gather interaction, custom icons, and combat eligibility.
-9. Verify Contracts accept, complete, exactly-once gold/XP claim, raid deferral, and restart persistence.
-10. Verify one complete PvP match, cleanup, reward, zone behavior, and restart behavior.
+3. Verify one complete Practice Duel lifecycle.
+4. Verify one complete PvP match, cleanup, reward, zone behavior, and restart behavior.
+5. Verify Journal launch, entry persistence, and restart behavior.
+6. Verify Party Tools launch, controls, and camera containment.
+7. Verify a continuous Follow multi-hop expedition.
+8. Verify Deep Sims direct conversation, party back-and-forth, session reference, Wiki routing, and news routing.
+9. Verify Crafting gather interaction, custom icons, and combat eligibility.
+10. Verify Contracts accept, complete, exactly-once gold/XP claim, raid deferral, and restart persistence.
 11. Verify Campmaster Hunt Camp/Relax party transitions, zoning, and restart behavior.
 12. Verify Nemesis selection, lifecycle, duplicate prevention, zoning, and persistence.
 
