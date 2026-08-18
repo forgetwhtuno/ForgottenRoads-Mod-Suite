@@ -205,7 +205,7 @@
         "/eduel stop"
       ],
       "experimental": [],
-      "version": "0.4.3",
+      "version": "0.4.6",
       "dll": "ErenshorDuel.dll",
       "sourceRoot": "mods/Erenshor-Duel",
       "requiredFiles": [
@@ -228,7 +228,7 @@
       "experimental": [
         "Natural ambush behavior remains a live-test gate"
       ],
-      "version": "0.5.7",
+      "version": "0.5.10",
       "dll": "ErenshorPvP.dll",
       "sourceRoot": "mods/Erenshor-PvP",
       "requiredFiles": [

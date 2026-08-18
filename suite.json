@@ -163,13 +163,13 @@
       "dll": "ErenshorDuel.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.4.3 combat-semantics repair restores native damage-to-virtual-HP transaction, generalized self-cast admission, and actor-aware AoE containment. Requires current build/install plus ordered melee/self-heal/AoE/cleanup live validation.",
+      "notes": "0.4.6 candidate on the restored native damage-to-virtual-HP transaction, with self-cast admission narrowed so an NPC duelist's damaging spell is no longer read as a self-cast. Actor-aware AoE containment preserved. Not live-proven: requires current build/install plus the ordered duel lifecycle, targeted self-heal, AoE, repeat-duel, and cleanup live validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/eduel selftest",
-      "version": "0.4.3",
+      "version": "0.4.6",
       "pluginId": "ErenshorDuel"
     },
     {
@@ -182,13 +182,13 @@
       "dll": "ErenshorPvP.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.5.7 native-AI match-start repair retains nameplate runtime state, independently repairs native behavior/nav coroutines, adds arranged countdown/GO containment, healing support, and fail-closed inactive-AI reward safety. Requires current build/install plus two consecutive live 5v5 matches.",
+      "notes": "0.5.10 candidate: native NPC lifecycle restored as the owner of proxy navigation/behavior, native Start/nav recovery, and per-proxy Start fault isolation so one failed proxy cannot destroy a viable match. Arranged countdown/GO containment and fail-closed inactive-AI reward safety preserved. LIVE UNPROVEN: requires current build/install, a single canonical plugin identity, and two consecutive arranged 5v5 matches plus a restart smoke match.",
       "testClass": "standalone_deterministic_plus_in_game_selftest",
       "testScripts": [
         "tests/RUN_UI_TESTS.ps1"
       ],
       "inGameSelfTest": "/epvp selftest",
-      "version": "0.5.7",
+      "version": "0.5.10",
       "pluginId": "ErenshorPvP"
     },
     {

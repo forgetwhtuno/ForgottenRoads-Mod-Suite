@@ -17,8 +17,8 @@ Current release status is conservative: deterministic/build evidence is recorded
 | Campmaster | [ForgottenRoads-Campmaster](https://github.com/forgetwhtuno/ForgottenRoads-Campmaster) | 0.4.0 | Needs focused live workflow validation |
 | Nemesis | [ForgottenRoads-Nemesis](https://github.com/forgetwhtuno/ForgottenRoads-Nemesis) | 0.3.0 | Automatic rival/two-way chat candidate; needs current live assignment/chat/persistence proof |
 | Crafting Expanded | [ForgottenRoads-Crafting-Expanded](https://github.com/forgetwhtuno/ForgottenRoads-Crafting-Expanded) | 0.2.4 | Preview; live production-recipe evidence remains required |
-| Practice Duel | [ForgottenRoads-Duel](https://github.com/forgetwhtuno/ForgottenRoads-Duel) | 0.4.3 | Combat-semantics candidate; needs current melee/self-heal/AoE/cleanup live proof |
-| PvP | [ForgottenRoads-PvP](https://github.com/forgetwhtuno/ForgottenRoads-PvP) | 0.5.7 | Native-AI match-start candidate; needs two complete 5v5 plus restart proof |
+| Practice Duel | [ForgottenRoads-Duel](https://github.com/forgetwhtuno/ForgottenRoads-Duel) | 0.4.6 | Combat-semantics candidate; needs current lifecycle, targeted self-heal, AoE, repeat-duel, and cleanup live proof |
+| PvP | [ForgottenRoads-PvP](https://github.com/forgetwhtuno/ForgottenRoads-PvP) | 0.5.10 | Native lifecycle/fault-isolation candidate; live unproven, needs two consecutive 5v5 plus restart proof |
 | Follow | [ForgottenRoadsFollow](https://github.com/forgetwhtuno/ForgottenRoadsFollow) | 0.6.4 | Needs continuous multi-hop expedition proof |
 | Suite Hub | [ForgottenRoadsSuiteHub](https://github.com/forgetwhtuno/ForgottenRoadsSuiteHub) | 0.5.3 | Needs integrated live Hub/UI validation |
 

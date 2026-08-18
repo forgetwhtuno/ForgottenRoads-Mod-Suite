@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedFrom": "FINAL_RC_BUILD_RECEIPT.json",
-  "candidateId": "forgotten-roads-ws3-current-source-pending-rebuild",
+  "candidateId": "forgotten-roads-current-pr-heads-pending-rebuild",
   "publicIdentity": {
     "author": "forgetwhtuno",
     "email": "314876526+forgetwhtuno@users.noreply.github.com"
@@ -12,7 +12,7 @@
   "installedSet": "REQUIRES_REINSTALL_AND_HASH_VERIFY",
   "activePluginAudit": "REQUIRES_LUNARIS_IDENTITY_AUDIT",
   "liveCertification": "PENDING_ORDERED_LIVE_MATRIX",
-  "liveCertificationNote": "All 12 modules are PENDING in docs/LIVE_TEST_MATRIX.md; every module's liveTestStatus.exactCandidate below is NOT_RUN. The aggregate must not name a residual subset of rows.",
+  "liveCertificationNote": "All 12 modules are PENDING in docs/LIVE_TEST_MATRIX.md; every module's liveTestStatus.exactCandidate below is NOT_RUN. No module carries a build, installed-hash, or live result for its current source. The aggregate must not name a residual subset of rows.",
   "mods": [
     {
       "modId": "DeepSims",
@@ -110,26 +110,27 @@
       "version": "0.1.8",
       "classification": "YELLOW RC NEAR READY",
       "dllFilename": "ErenshorJournal.dll",
-      "sha256": "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
-      "installedSha256": "c203d4fe11574c3a3fe4e16df531de63d96a163f55a91553339b9c06110b8678",
-      "sourceRevisionBuildMarker": "tree-sha256:ab03a9fa7faca757d55376634288764435a10aa388b2f76b2e22087e78108067",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
       "deterministicTests": {
-        "status": "PASS",
+        "status": "NOT_RUN_RECONCILED_SOURCE",
         "scripts": [
           "RUN_TESTS.ps1"
         ],
         "note": "Exact candidate build gate"
       },
-      "compile": "PASS",
-      "install": "PASS_HASH_VERIFIED",
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
       "liveTestStatus": {
-        "exactCandidate": "NOT_RUN",
-        "startupVersion": "NOT_RUN",
-        "uiSmoke": "NOT_RUN",
-        "zoneTransition": "NOT_RUN",
-        "persistenceReload": "NOT_RUN"
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
+        "Current source changed after the previously recorded DLL: rebuild, reinstall, and re-verify the hash before any exact-candidate claim.",
         "Exact-candidate open/edit/collapse/drag/camera containment plus restart persistence are not yet live-proven."
       ]
     },
@@ -139,27 +140,28 @@
       "version": "0.1.3",
       "classification": "ORANGE BLOCKED",
       "dllFilename": "ErenshorGuildLife.dll",
-      "sha256": "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
-      "installedSha256": "3d0d7c4030e7bf90b3a921ee7c8570d427e73fa55564ba7a5d217e0e3d4e12d8",
-      "sourceRevisionBuildMarker": "tree-sha256:16b2ffbf1647e5c1e2dff5dd2943bb6f5795bf26ec0438410bb865adff79669b",
+      "sha256": "PENDING_RECONCILED_BUILD",
+      "installedSha256": "PENDING_RECONCILED_INSTALL",
+      "sourceRevisionBuildMarker": "PENDING_RECONCILED_LOCAL_SOURCE_BUILD",
       "deterministicTests": {
-        "status": "PASS",
+        "status": "NOT_RUN_RECONCILED_SOURCE",
         "scripts": [
           "RUN_TESTS.ps1"
         ],
         "note": "Exact candidate build gate"
       },
-      "compile": "PASS",
-      "install": "PASS_HASH_VERIFIED",
+      "compile": "NOT_RUN_RECONCILED_SOURCE",
+      "install": "NOT_RUN_RECONCILED_SOURCE",
       "liveTestStatus": {
-        "exactCandidate": "NOT_RUN",
-        "startupVersion": "NOT_RUN",
-        "uiSmoke": "NOT_RUN",
-        "zoneTransition": "NOT_RUN",
-        "persistenceReload": "NOT_RUN"
+        "exactCandidate": "NOT_RUN_RECONCILED_SOURCE",
+        "startupVersion": "NOT_RUN_RECONCILED_SOURCE",
+        "uiSmoke": "NOT_RUN_RECONCILED_SOURCE",
+        "zoneTransition": "NOT_RUN_RECONCILED_SOURCE",
+        "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Owning UI workstream reports camera containment is incomplete: gesture ownership is acquired too late and no verified Harmony CameraController.UsingUI patch exists."
+        "Current source changed after the previously recorded DLL (retained-UI gesture ownership and camera containment): rebuild, reinstall, and re-verify the hash before any exact-candidate claim.",
+        "Current source adds pointer-down gesture ownership and a proven CameraController.UsingUI containment postfix; this is source-level only and still requires exact-candidate live proof of camera containment."
       ]
     },
     {
@@ -256,7 +258,7 @@
     {
       "modId": "Duel",
       "displayName": "Practice Duel",
-      "version": "0.4.3",
+      "version": "0.4.6",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorDuel.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -279,14 +281,17 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Build/install the exact 0.4.3 candidate against current Assembly-CSharp.dll.",
-        "Live-prove bidirectional virtual damage first, then targeted self-heal, clean/hostile/bystander AoE semantics, cleanup, and two consecutive duels."
+        "Build/install the exact 0.4.6 candidate against the current Assembly-CSharp.dll.",
+        "Live-prove the ordered duel lifecycle on that exact artifact: the duel starts normally, both sides deal virtual Duel damage, and the duel continues.",
+        "With the opposing duelist still targeted, a legitimate SelfOnly/ApplyToCaster/InflictOnSelf heal must apply to the caster, must not heal the opponent, and must show normal resource and cooldown behavior.",
+        "Repeat a second duel without restarting the game.",
+        "AoE and cleanup containment remain part of the final live proof."
       ]
     },
     {
       "modId": "PvP",
       "displayName": "PvP",
-      "version": "0.5.7",
+      "version": "0.5.10",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorPvP.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -309,9 +314,12 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Build/install the exact 0.5.7 candidate and prove exactly one ErenshorPvP plugin identity.",
-        "Run two consecutive arranged 5v5 matches with 3/2/1/GO, no pre-GO damage, native behavior+nav coroutine readiness, enemy engagement, valid reward, and clean second-match reset.",
-        "Restart and repeat a smoke match before release certification."
+        "Build/install the exact 0.5.10 candidate and prove exactly one ErenshorPvP plugin identity is active.",
+        "Run an arranged 5v5 on that exact artifact showing 3/2/1/GO, no pre-GO damage, attackers that actually move and engage, defenders able to damage attackers, attackers able to damage defenders, and native combat/spell behavior occurring.",
+        "Prove a single failed proxy does not destroy an otherwise viable match.",
+        "Prove rewards are granted only on a legitimate match outcome.",
+        "Run a second consecutive 5v5 without restarting, then restart and run a smoke match.",
+        "No balance conclusions may be drawn until active combat is proven on the exact candidate."
       ]
     },
     {
