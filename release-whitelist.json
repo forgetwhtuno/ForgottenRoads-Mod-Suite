@@ -29,11 +29,12 @@
       "experimental": [
         "LLM/Ollama-backed expression is optional and provider-dependent"
       ],
-      "version": "0.7.6",
+      "version": "0.8.2",
       "dll": "ErenshorDeepSims.dll",
       "sourceRoot": "mods/DeepSim-erenshor",
       "requiredFiles": [
         "README.md",
+        "INSTALL.md",
         "LICENSE"
       ],
       "optionalFiles": [
@@ -93,7 +94,7 @@
         "Journal launcher or Suite Hub Journal shortcut"
       ],
       "experimental": [],
-      "version": "0.1.8",
+      "version": "0.1.11",
       "dll": "ErenshorJournal.dll",
       "sourceRoot": "mods/ErenshorJournal",
       "requiredFiles": [
@@ -158,7 +159,7 @@
         "/enemesis selftest"
       ],
       "experimental": [],
-      "version": "0.3.0",
+      "version": "0.3.3",
       "dll": "ErenshorNemesis.dll",
       "sourceRoot": "mods/Erenshor-Nemesis",
       "requiredFiles": [
@@ -205,7 +206,7 @@
         "/eduel stop"
       ],
       "experimental": [],
-      "version": "0.4.6",
+      "version": "0.4.17",
       "dll": "ErenshorDuel.dll",
       "sourceRoot": "mods/Erenshor-Duel",
       "requiredFiles": [
@@ -228,7 +229,7 @@
       "experimental": [
         "Natural ambush behavior remains a live-test gate"
       ],
-      "version": "0.5.10",
+      "version": "0.5.11",
       "dll": "ErenshorPvP.dll",
       "sourceRoot": "mods/Erenshor-PvP",
       "requiredFiles": [
@@ -251,7 +252,7 @@
       "experimental": [
         "Direct cross-zone Follow is off by default and remains explicitly experimental"
       ],
-      "version": "0.6.4",
+      "version": "0.6.22",
       "dll": "ErenshorFollow.dll",
       "sourceRoot": "mods/ErenshorFollow",
       "requiredFiles": [
@@ -274,7 +275,7 @@
       "experimental": [
         "Native Escape quick-close consumption remains capability-gated until a verified game target exists"
       ],
-      "version": "0.5.3",
+      "version": "0.5.5",
       "dll": "ErenshorSuiteHub.dll",
       "sourceRoot": "ErenshorSuiteHub",
       "requiredFiles": [

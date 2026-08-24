@@ -17,7 +17,7 @@
     {
       "modId": "DeepSims",
       "displayName": "Deep Sims",
-      "version": "0.7.6",
+      "version": "0.8.2",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorDeepSims.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -40,8 +40,8 @@
         "persistenceReload": "NOT_RUN_RECONCILED_SOURCE"
       },
       "knownBlockers": [
-        "Build/install the exact reconciled 0.7.6 candidate on the current game machine.",
-        "Live-prove runtime-hook readiness/fail-closed behavior, 4B-only conversation routing, and standalone Follow ownership after restart/zone transitions."
+        "Build/install the exact reconciled 0.8.2 candidate on the current game machine.",
+        "Live-prove identity/background isolation, character scoping, pending-request hot unload, standalone operation, and full-suite compatibility."
       ]
     },
     {
@@ -107,7 +107,7 @@
     {
       "modId": "Journal",
       "displayName": "Journal",
-      "version": "0.1.8",
+      "version": "0.1.11",
       "classification": "YELLOW RC NEAR READY",
       "dllFilename": "ErenshorJournal.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -198,7 +198,7 @@
     {
       "modId": "Nemesis",
       "displayName": "Nemesis",
-      "version": "0.3.0",
+      "version": "0.3.3",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorNemesis.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -258,7 +258,7 @@
     {
       "modId": "Duel",
       "displayName": "Practice Duel",
-      "version": "0.4.6",
+      "version": "0.4.17",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorDuel.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -291,7 +291,7 @@
     {
       "modId": "PvP",
       "displayName": "PvP",
-      "version": "0.5.10",
+      "version": "0.5.11",
       "classification": "YELLOW RC NEEDS CURRENT LIVE PROOF",
       "dllFilename": "ErenshorPvP.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -325,7 +325,7 @@
     {
       "modId": "Follow",
       "displayName": "Follow",
-      "version": "0.6.4",
+      "version": "0.6.22",
       "classification": "YELLOW RC NEAR READY",
       "dllFilename": "ErenshorFollow.dll",
       "sha256": "PENDING_RECONCILED_BUILD",
@@ -355,7 +355,7 @@
     {
       "modId": "SuiteHub",
       "displayName": "Suite Hub",
-      "version": "0.5.3",
+      "version": "0.5.5",
       "classification": "YELLOW RC NEAR READY",
       "dllFilename": "ErenshorSuiteHub.dll",
       "sha256": "PENDING_RECONCILED_BUILD",

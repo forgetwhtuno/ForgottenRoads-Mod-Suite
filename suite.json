@@ -16,12 +16,12 @@
       "dll": "ErenshorDeepSims.dll",
       "enabled": true,
       "status": "NEEDS_LIVE_TEST",
-      "notes": "0.7.6 single-model/social-grounding source with standalone-runtime fail-closed Harmony readiness; embedded /dsfollow movement removed so standalone Erenshor Follow owns movement compatibility. Requires current deterministic build plus live conversation/reload validation.",
+      "notes": "0.8.2 Beta candidate with verified native identity, one in-world persona, one fictional MMO-player background, and bounded character-scoped memory. Requires exact-candidate identity/background, character-isolation, pending-request hot-unload, standalone, and full-suite live validation.",
       "testClass": "standalone_deterministic",
       "testScripts": [
         "tests/RUN_DETERMINISTIC_TESTS.ps1"
       ],
-      "version": "0.7.6",
+      "version": "0.8.2",
       "pluginId": "ErenshorDeepSims"
     },
     {
@@ -75,7 +75,7 @@
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.1.8",
+      "version": "0.1.11",
       "pluginId": "ErenshorJournal"
     },
     {
@@ -131,7 +131,7 @@
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/enemesis selftest",
-      "version": "0.3.0",
+      "version": "0.3.3",
       "pluginId": "ErenshorNemesis"
     },
     {
@@ -169,7 +169,7 @@
         "tests/RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/eduel selftest",
-      "version": "0.4.6",
+      "version": "0.4.17",
       "pluginId": "ErenshorDuel"
     },
     {
@@ -188,7 +188,7 @@
         "tests/RUN_UI_TESTS.ps1"
       ],
       "inGameSelfTest": "/epvp selftest",
-      "version": "0.5.10",
+      "version": "0.5.11",
       "pluginId": "ErenshorPvP"
     },
     {
@@ -207,7 +207,7 @@
         "RUN_TESTS.ps1"
       ],
       "inGameSelfTest": "/efollow diag",
-      "version": "0.6.4",
+      "version": "0.6.22",
       "pluginId": "ErenshorFollow"
     },
     {
@@ -225,7 +225,7 @@
       "testScripts": [
         "RUN_TESTS.ps1"
       ],
-      "version": "0.5.3",
+      "version": "0.5.5",
       "pluginId": "ErenshorSuiteHub"
     }
   ],

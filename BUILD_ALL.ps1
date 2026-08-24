@@ -87,7 +87,14 @@ if (Test-Path $StageManifestPath) { Remove-Item $StageManifestPath -Force }
 $StagingData = Join-Path $Staging "Erenshor_Data"
 if (Test-Path $StagingData) {
     $item = Get-Item $StagingData -Force
-    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { Remove-Item $StagingData -Force }
+    if (($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) {
+        # Remove-Item -Force is unreliable on directory junctions in Windows PowerShell 5.1 (it
+        # intermittently throws "Object reference not set to an instance of an object." from
+        # Microsoft.PowerShell.Commands.RemoveItemCommand instead of unlinking the reparse point).
+        # cmd's rmdir correctly unlinks a junction without recursing into/deleting the target.
+        & cmd.exe /c "rmdir `"$StagingData`"" | Out-Null
+        if (Test-Path $StagingData) { throw "Failed to remove stale staging junction: $StagingData" }
+    }
     else { Remove-Item $StagingData -Recurse -Force }
 }
 New-Item -ItemType Junction -Path $StagingData -Target (Join-Path $RealGameDir "Erenshor_Data") | Out-Null

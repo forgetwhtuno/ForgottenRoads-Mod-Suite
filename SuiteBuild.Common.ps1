@@ -107,7 +107,7 @@ function Install-SuiteSetTransactional($Items, [scriptblock]$PostInstallValidati
     }
 
     $rollbackRoot = Join-Path $env:TEMP ("ErenshorSuiteRollback-" + [Guid]::NewGuid().ToString("N"))
-    $persistentBackupRoot = Join-Path (Split-Path -Parent $PSScriptRoot) ("local-build-backups\discoverability-preinstall-" + (Get-Date -Format "yyyyMMdd-HHmmss"))
+    $persistentBackupRoot = Join-Path (Split-Path -Parent $PSScriptRoot) (".local-build\backups\discoverability-preinstall-" + (Get-Date -Format "yyyyMMdd-HHmmss"))
     New-Item -ItemType Directory -Force -Path $rollbackRoot | Out-Null
     New-Item -ItemType Directory -Force -Path $persistentBackupRoot | Out-Null
     $records = @()
